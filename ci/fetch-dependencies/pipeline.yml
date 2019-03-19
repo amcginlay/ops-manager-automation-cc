@@ -1,0 +1,166 @@
+---
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
+resources:
+- name: daily
+  type: time
+  source:
+    interval: 24h
+
+- name: config
+  type: git
+  source:
+    private_key: ((configuration.private_key))
+    uri: ((configuration.uri))
+    branch: master
+    submodules: all
+    depth: 1
+
+- name: opsman-product
+  type: s3
+  source:
+    access_key_id: ((s3.access_key_id))
+    bucket: ((s3.buckets.pivnet_products))
+    region_name: ((s3.region_name))
+    secret_access_key: ((s3.secret_access_key))
+    regexp: OpsManager(.*)onGCP.yml
+
+- name: pks-product
+  type: s3
+  source:
+    access_key_id: ((s3.access_key_id))
+    bucket: ((s3.buckets.pivnet_products))
+    region_name: ((s3.region_name))
+    secret_access_key: ((s3.secret_access_key))
+    regexp: pivotal-container-service-(.*).pivotal
+
+- name: pks-stemcell
+  type: s3
+  source:
+    access_key_id: ((s3.access_key_id))
+    bucket: ((s3.buckets.pivnet_products))
+    region_name: ((s3.region_name))
+    secret_access_key: ((s3.secret_access_key))
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+
+- name: platform-automation-pivnet
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: 2\.(.*)
+    sort_by: semver
+
+- name: platform-automation-tasks
+  type: s3
+  source:
+    access_key_id: ((s3.access_key_id))
+    bucket: ((s3.buckets.pivnet_products))
+    region_name: ((s3.region_name))
+    secret_access_key: ((s3.secret_access_key))
+    regexp: platform-automation-tasks-(.*).zip
+
+- name: platform-automation-image
+  type: s3
+  source:
+    access_key_id: ((s3.access_key_id))
+    bucket: ((s3.buckets.pivnet_products))
+    region_name: ((s3.region_name))
+    secret_access_key: ((s3.secret_access_key))
+    regexp: platform-automation-image-(.*).tgz
+
+jobs:
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product-configs/opsman.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
+
+- name: fetch-pks
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-pks-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product-configs/pks.yml
+    output_mapping: {downloaded-stemcell: pks-stemcell}
+  - aggregate:
+    - put: pks-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: pks-stemcell
+      params:
+        file: pks-stemcell/*.tgz
+
+- name: fetch-platform-automation
+  # We use the pivnet resource to bootstrap the pipeline,
+  # and because this product is part of the pipeline, not the foundation
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+  - aggregate:
+    - put: platform-automation-tasks
+      params:
+        file: platform-automation-pivnet/*tasks*.zip
+    - put: platform-automation-image
+      params:
+        file: platform-automation-pivnet/*image*.tgz
