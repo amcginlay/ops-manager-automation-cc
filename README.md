@@ -364,7 +364,7 @@ git clone https://github.com/${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git ~/${G
 
 ## Clone _this_ repo
 
-_This_ repo conatins file and scripts required to build your private repo.
+_This_ repo contains file and scripts required to build your private repo.
 
 Clone it now:
 
