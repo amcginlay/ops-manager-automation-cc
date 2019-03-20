@@ -17,7 +17,7 @@ gcloud compute instances create "jbox-pal" \
   --project "${GCP_PROJECT_ID}" \
   --zone "us-central1-a"
 ```
-
+FOPSMN_IMAGE
 ## Move to the jumpbox and log in to GCP
 
 ```bash
@@ -206,6 +206,8 @@ pivnet download-product-files \
 
 OPSMAN_IMAGE=$(bosh interpolate OpsManager*onGCP.yml --path /us)
 ```
+
+Verify that `OPSMAN_IMAGE` contains a value before continuing.
 
 ## Terraform the infrastructure
 
