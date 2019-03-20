@@ -302,18 +302,11 @@ __Note__ `control-tower` will log you in but valid access tokens will expire eve
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} login --insecure --username admin --password ${CC_ADMIN_PASSWD}
 ```
 
-## Set up dedicated S3 bucket for downloads
+## Set up dedicated GCS bucket for downloads
 
 ```bash
-aws configure
-```
-
-Use your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` settings. Set region to `us-east-1`. Leave output format empty.
-
-Create the bucket:
-
-```bash
-aws s3 mb s3://${PKS_SUBDOMAIN_NAME}-concourse-resources
+gsutil mb -c regional -l us-central1 gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
+gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
 ```
 
 ## Create and register a GitHub SSH key for the jumpbox
