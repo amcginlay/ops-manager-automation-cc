@@ -1,84 +1,84 @@
 ---
+resource_types:
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
 resources:
-  - name: platform-automation-tasks
-    type: s3
-    source:
-      access_key_id: ((s3.access_key_id))
-      secret_access_key: ((s3.secret_access_key))
-      region_name: ((s3.region_name))
-      bucket: ((s3.buckets.pivnet_products))
-      regexp: .*tasks-(.*).zip
+- name: platform-automation-tasks
+  type: gcs
+  source:
+    regexp: .*tasks-(.*).zip
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
-  - name: platform-automation-image
-    type: s3
-    source:
-      access_key_id: ((s3.access_key_id))
-      secret_access_key: ((s3.secret_access_key))
-      region_name: ((s3.region_name))
-      bucket: ((s3.buckets.pivnet_products))
-      regexp: .*image-(.*).tgz
+- name: platform-automation-image
+  type: gcs
+  source:
+    regexp: .*image-(.*).tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
-  - name: installation
-    type: s3
-    source:
-      access_key_id: ((s3.access_key_id))
-      secret_access_key: ((s3.secret_access_key))
-      region_name: ((s3.region_name))
-      bucket: ((s3.buckets.installation))
-      regexp: installation-(.*).zip
+- name: installation
+  type: gcs
+  source:
+    regexp: installation-(.*).zip
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
-  - name: opsman-image
-    type: s3
-    source:
-      access_key_id: ((s3.access_key_id))
-      bucket: ((s3.buckets.pivnet_products))
-      region_name: ((s3.region_name))
-      secret_access_key: ((s3.secret_access_key))
-      regexp: ((opsman_image_s3_versioned_regexp)) # vsphere ex: pcf-vsphere-(.*).ova
+- name: opsman-image
+  type: gcs
+  source:
+    regexp: ((opsman_image_s3_versioned_regexp)) # vsphere ex: pcf-vsphere-(.*).ova
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
-  - name: pks-stemcell
-    type: s3
-    source:
-      access_key_id: ((s3.access_key_id))
-      secret_access_key: ((s3.secret_access_key))
-      region_name: ((s3.region_name))
-      bucket: ((s3.buckets.pivnet_products))
-      regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+- name: pks-stemcell
+  type: gcs
+  source:
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
-  - name: pks-product
-    type: s3
-    source:
-      access_key_id: ((s3.access_key_id))
-      secret_access_key: ((s3.secret_access_key))
-      region_name: ((s3.region_name))
-      bucket: ((s3.buckets.pivnet_products))
-      regexp: pivotal-container-service-(.*).pivotal
+- name: pks-product
+  type: gcs
+  source:
+    regexp: pivotal-container-service-(.*).pivotal
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
-  # configurations
-  - name: configuration
-    type: git
-    source:
-      private_key: ((configuration.private_key))
-      uri: ((configuration.uri))
-      branch: master
+# configurations
+- name: configuration
+  type: git
+  source:
+    private_key: ((configuration.private_key))
+    uri: ((configuration.uri))
+    branch: master
 
-  - name: variable
-    type: git
-    source:
-      private_key: ((variable.private_key))
-      uri: ((variable.uri))
-      branch: master
+- name: variable
+  type: git
+  source:
+    private_key: ((variable.private_key))
+    uri: ((variable.uri))
+    branch: master
 
-  # triggers used to have jobs do something in a timely manner
-  - name: one-time-trigger
-    type: time
-    source:
-      interval: 999999h
+# triggers used to have jobs do something in a timely manner
+- name: one-time-trigger
+  type: time
+  source:
+    interval: 999999h
 
-  - name: daily-trigger
-    type: time
-    source:
-      interval: 24h
+- name: daily-trigger
+  type: time
+  source:
+    interval: 24h
 
 jobs:
   - name: install-opsman

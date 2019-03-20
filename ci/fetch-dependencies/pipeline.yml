@@ -5,6 +5,11 @@ resource_types:
   source:
     repository: pivotalcf/pivnet-resource
     tag: latest-final
+    
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
 
 resources:
 - name: daily
@@ -22,31 +27,28 @@ resources:
     depth: 1
 
 - name: opsman-product
-  type: s3
+  type: gcs
   source:
-    access_key_id: ((s3.access_key_id))
-    bucket: ((s3.buckets.pivnet_products))
-    region_name: ((s3.region_name))
-    secret_access_key: ((s3.secret_access_key))
     regexp: OpsManager(.*)onGCP.yml
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
 - name: pks-product
-  type: s3
+  type: gcs
   source:
-    access_key_id: ((s3.access_key_id))
-    bucket: ((s3.buckets.pivnet_products))
-    region_name: ((s3.region_name))
-    secret_access_key: ((s3.secret_access_key))
     regexp: pivotal-container-service-(.*).pivotal
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
 - name: pks-stemcell
-  type: s3
+  type: gcs
   source:
-    access_key_id: ((s3.access_key_id))
-    bucket: ((s3.buckets.pivnet_products))
-    region_name: ((s3.region_name))
-    secret_access_key: ((s3.secret_access_key))
     regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
 - name: platform-automation-pivnet
   type: pivnet
@@ -57,22 +59,20 @@ resources:
     sort_by: semver
 
 - name: platform-automation-tasks
-  type: s3
+  type: gcs
   source:
-    access_key_id: ((s3.access_key_id))
-    bucket: ((s3.buckets.pivnet_products))
-    region_name: ((s3.region_name))
-    secret_access_key: ((s3.secret_access_key))
     regexp: platform-automation-tasks-(.*).zip
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
 - name: platform-automation-image
-  type: s3
+  type: gcs
   source:
-    access_key_id: ((s3.access_key_id))
-    bucket: ((s3.buckets.pivnet_products))
-    region_name: ((s3.region_name))
-    secret_access_key: ((s3.secret_access_key))
     regexp: platform-automation-image-(.*).tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
 
 jobs:
 - name: fetch-opsman
