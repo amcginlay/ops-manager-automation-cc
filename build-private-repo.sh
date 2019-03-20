@@ -24,10 +24,9 @@ variable:
   private_key: |
 $(cat ~/.ssh/id_rsa | sed 's/^/    /')
   uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
-s3:
-  access_key_id: ${AWS_ACCESS_KEY_ID}
-  secret_access_key: ${AWS_SECRET_ACCESS_KEY}
-  region_name: us-east-1
+gcp-credentials: |
+$(cat ~/gcp_credentials.json | sed 's/^/  /')
+gcs:
   buckets:
     pivnet_products: ${PKS_SUBDOMAIN_NAME}-concourse-resources
     installation: ${PKS_SUBDOMAIN_NAME}-concourse-resources
