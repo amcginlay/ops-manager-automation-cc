@@ -253,21 +253,6 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
 
 This will take about 20 mins to complete.
 
-## Patch the firewall
-
-The following firewall rule addresses a known issue and will need to be added until `concourse-up` (or `control-tower`) adds the missing ports to the standard rules:
-
-```bash
-gcloud compute firewall-rules create concourse-up-${PKS_SUBDOMAIN_NAME}-patch \
- --direction=INGRESS \
- --priority=1000 \
- --network=concourse-up-${PKS_SUBDOMAIN_NAME} \
- --action=ALLOW \
- --rules=tcp:8844,tcp:8443 \
- --source-ranges=10.0.1.0/24 \
- --target-tags=external,internal,worker,web
-```
-
 ## Verify BOSH and Credhub connectivity
 
 ```bash
