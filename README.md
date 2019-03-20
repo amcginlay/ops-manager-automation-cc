@@ -82,15 +82,16 @@ sudo apt install --yes tree
 ```bash
 cd ~
 
-FLY_VERSION=4.2.3
-wget -O fly https://github.com/concourse/concourse/releases/download/v${FLY_VERSION}/fly_linux_amd64 && \
-  chmod +x fly && \
-  sudo mv fly /usr/local/bin/
+FLY_VERSION=5.0.0
+wget -O fly.tgz https://github.com/concourse/concourse/releases/download/v${FLY_VERSION}/fly-${FLY_VERSION}-linux-amd64.tgz && \
+  tar -xvf fly.tgz && \
+  sudo mv fly /usr/local/bin && \
+  rm fly.tgz
   
-CCUP_VERSION=0.20.2
-wget -O concourse-up https://github.com/EngineerBetter/concourse-up/releases/download/${CCUP_VERSION}/concourse-up-linux-amd64 && \
-  chmod +x concourse-up && \
-  sudo mv concourse-up /usr/local/bin/
+CT_VERSION=0.3.0
+wget -O control-tower https://github.com/EngineerBetter/control-tower/releases/download/${CT_VERSION}/control-tower-linux-amd64 && \
+  chmod +x control-tower && \
+  sudo mv control-tower /usr/local/bin/
 
 OM_VERSION=0.51.0
 wget -O om https://github.com/pivotal-cf/om/releases/download/${OM_VERSION}/om-linux && \
@@ -245,7 +246,7 @@ This will take about 5-10 mins to complete.
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
-  concourse-up deploy \
+  control-tower deploy \
     --region us-central1 \
     --iaas gcp \
     ${PKS_SUBDOMAIN_NAME}
@@ -253,26 +254,11 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
 
 This will take about 20 mins to complete.
 
-## Patch the firewall
-
-The following firewall rule addresses a known issue and will need to be added until `concourse-up` (or `control-tower`) adds the missing ports to the standard rules:
-
-```bash
-gcloud compute firewall-rules create concourse-up-${PKS_SUBDOMAIN_NAME}-patch \
- --direction=INGRESS \
- --priority=1000 \
- --network=concourse-up-${PKS_SUBDOMAIN_NAME} \
- --action=ALLOW \
- --rules=tcp:8844,tcp:8443 \
- --source-ranges=10.0.1.0/24 \
- --target-tags=external,internal,worker,web
-```
-
 ## Verify BOSH and Credhub connectivity
 
 ```bash
 eval "$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
-  concourse-up info \
+  control-tower info \
     --region us-central1 \
     --iaas gcp \
     --env ${PKS_SUBDOMAIN_NAME})"
@@ -285,7 +271,7 @@ credhub --version
 
 ```bash
 INFO=$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
-  concourse-up info \
+  control-tower info \
     --region us-central1 \
     --iaas gcp \
     --json \
@@ -303,17 +289,17 @@ source ~/.env
 
 ```bash
 fly targets
-fly -t concourse-up-${PKS_SUBDOMAIN_NAME} pipelines
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} pipelines
 ```
 
 Navigate to the `url` shown for `fly targets`.
 
 Use `admin` user and the value of `CC_ADMIN_PASSWD` to login and see the pre-configured pipeline.
 
-__Note__ `concourse-up` will log you in but valid access tokens will expire every 24 hours. The command to log back in is:
+__Note__ `control-tower` will log you in but valid access tokens will expire every 24 hours. The command to log back in is:
 
 ```bash
-fly -t concourse-up-${PKS_SUBDOMAIN_NAME} login --insecure --username admin --password ${CC_ADMIN_PASSWD}
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} login --insecure --username admin --password ${CC_ADMIN_PASSWD}
 ```
 
 ## Set up dedicated S3 bucket for downloads
@@ -404,11 +390,11 @@ credhub set -n /pipeline/google/pivnet-api-token -t value -v ${PIVNET_UAA_REFRES
 Set and unpause the pipeline:
 
 ```bash
-fly -t concourse-up-${PKS_SUBDOMAIN_NAME} set-pipeline -p fetch-dependencies -n \
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p fetch-dependencies -n \
   -c ~/${GITHUB_PRIVATE_REPO_NAME}/ci/fetch-dependencies/pipeline.yml \
   -l ~/${GITHUB_PRIVATE_REPO_NAME}/ci/pipeline-vars.yml
 
-fly -t concourse-up-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p fetch-dependencies
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p fetch-dependencies
 ```
 
 This should begin to execute in ~60 seconds.
@@ -421,11 +407,11 @@ so watch for pipeline failures which contain the necessary URLs to follow.
 Set and unpause the pipeline:
 
 ```bash
-fly -t concourse-up-${PKS_SUBDOMAIN_NAME} set-pipeline -p install-opsman-and-products -n \
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p install-opsman-and-products -n \
   -c ~/${GITHUB_PRIVATE_REPO_NAME}/ci/install-opsman-and-products/pipeline.yml \
   -l ~/${GITHUB_PRIVATE_REPO_NAME}/ci/pipeline-vars.yml
 
-fly -t concourse-up-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p install-opsman-and-products
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p install-opsman-and-products
 ```
 
 This should begin to execute in ~60 seconds.
