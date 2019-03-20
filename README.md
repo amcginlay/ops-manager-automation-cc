@@ -82,10 +82,11 @@ sudo apt install --yes tree
 ```bash
 cd ~
 
-FLY_VERSION=4.2.3
-wget -O fly https://github.com/concourse/concourse/releases/download/v${FLY_VERSION}/fly_linux_amd64 && \
-  chmod +x fly && \
-  sudo mv fly /usr/local/bin/
+FLY_VERSION=5.0.0
+wget -O fly.tgz https://github.com/concourse/concourse/releases/download/v${FLY_VERSION}/fly-${FLY_VERSION}-linux-amd64.tgz && \
+  tar -xvf fly.tgz && \
+  sudo mv fly /usr/local/bin && \
+  rm fly.tgz
   
 CT_VERSION=0.3.0
 wget -O control-tower https://github.com/EngineerBetter/control-tower/releases/download/${CT_VERSION}/control-tower-linux-amd64 && \
