@@ -29,26 +29,26 @@ resources:
 - name: opsman-product
   type: gcs
   source:
+    regexp: OpsManager(.*)onGCP.yml
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))    
-    regexp: OpsManager(.*)onGCP.yml
 
 - name: pks-product
   type: gcs
   source:
+    regexp: pivotal-container-service-(.*).pivotal
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))    
-    regexp: pivotal-container-service-(.*).pivotal
 
 - name: pks-stemcell
   type: gcs
   source:
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))    
-    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
 
 - name: platform-automation-pivnet
   type: pivnet
@@ -61,18 +61,18 @@ resources:
 - name: platform-automation-tasks
   type: gcs
   source:
+    regexp: platform-automation-tasks-(.*).zip
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))    
-    regexp: platform-automation-tasks-(.*).zip
 
 - name: platform-automation-image
   type: gcs
   source:
+    regexp: platform-automation-image-(.*).tgz
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))    
-    regexp: platform-automation-image-(.*).tgz
 
 jobs:
 - name: fetch-opsman
