@@ -17,7 +17,7 @@ gcloud compute instances create "jbox-pal" \
   --project "${GCP_PROJECT_ID}" \
   --zone "us-central1-a"
 ```
-FOPSMN_IMAGE
+
 ## Move to the jumpbox and log in to GCP
 
 ```bash
