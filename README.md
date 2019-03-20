@@ -24,7 +24,9 @@ gcloud compute instances create "jbox-pal" \
 gcloud compute ssh ubuntu@jbox-pal \
   --project "${GCP_PROJECT_ID}" \
   --zone "us-central1-a"
+```
   
+```bash
 gcloud auth login --quiet
 ```
 
@@ -47,7 +49,7 @@ echo "export OM_DECRYPTION_PASSPHRASE=\${OM_PASSWORD}" >> ~/.env
 echo "export OM_SKIP_SSL_VALIDATION=true" >> ~/.env
 ```
 
-__Before__ continuing, open the `.env` file and update the values accordingly.
+__Before__ continuing, open the `.env` file and update the `CHANGE_ME` values accordingly.
 
 Ensure these variables get set into the shell every time the ubuntu user connects to the jumpbox:
 
