@@ -87,10 +87,10 @@ wget -O fly https://github.com/concourse/concourse/releases/download/v${FLY_VERS
   chmod +x fly && \
   sudo mv fly /usr/local/bin/
   
-CCUP_VERSION=0.20.2
-wget -O concourse-up https://github.com/EngineerBetter/concourse-up/releases/download/${CCUP_VERSION}/concourse-up-linux-amd64 && \
-  chmod +x concourse-up && \
-  sudo mv concourse-up /usr/local/bin/
+CT_VERSION=0.3.0
+wget -O control-tower https://github.com/EngineerBetter/control-tower/releases/download/${CT_VERSION}/control-tower-linux-amd64 && \
+  chmod +x control-tower && \
+  sudo mv control-tower /usr/local/bin/
 
 OM_VERSION=0.51.0
 wget -O om https://github.com/pivotal-cf/om/releases/download/${OM_VERSION}/om-linux && \
@@ -245,7 +245,7 @@ This will take about 5-10 mins to complete.
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
-  concourse-up deploy \
+  control-tower deploy \
     --region us-central1 \
     --iaas gcp \
     ${PKS_SUBDOMAIN_NAME}
