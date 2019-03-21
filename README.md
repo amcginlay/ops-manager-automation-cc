@@ -249,6 +249,7 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
   control-tower deploy \
     --region us-central1 \
     --iaas gcp \
+    --workers 3 \
     ${PKS_SUBDOMAIN_NAME}
 ```
 
