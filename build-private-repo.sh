@@ -37,7 +37,7 @@ credhub-client: ${CREDHUB_CLIENT}
 credhub-secret: ${CREDHUB_SECRET}
 credhub-server: ${CREDHUB_SERVER}
 opsman_image_s3_versioned_regexp: OpsManager(.*)onGCP.yml
-foundation: ''
+foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
 
 cat > ~/${GITHUB_PRIVATE_REPO_NAME}/vars/opsman-vars.yml << EOF
