@@ -40,7 +40,7 @@ opsman_image_s3_versioned_regexp: OpsManager(.*)onGCP.yml
 foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/vars/opsman-vars.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/opsman-vars.yml << EOF
 ---
 gcp-credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
@@ -49,7 +49,7 @@ gcp-project-id: $(gcloud config get-value core/project)
 subdomain-name: ${PKS_SUBDOMAIN_NAME}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/env/env.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
 ---
 target: ${OM_TARGET}
 connect-timeout: 30
@@ -60,14 +60,14 @@ password: ${OM_PASSWORD}
 decryption-passphrase: ${OM_DECRYPTION_PASSPHRASE}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/config/auth.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config/auth.yml << EOF
 ---
 username: ${OM_USERNAME}
 password: ${OM_PASSWORD}
 decryption-passphrase: ${OM_DECRYPTION_PASSPHRASE}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/vars/director-vars.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/director-vars.yml << EOF
 ---
 gcp-credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
@@ -75,7 +75,7 @@ gcp-project-id: $(gcloud config get-value core/project)
 subdomain-name: ${PKS_SUBDOMAIN_NAME}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/vars/pivotal-container-service-vars.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml << EOF
 ---
 gcp-project-id: $(gcloud config get-value core/project)
 subdomain-name: ${PKS_SUBDOMAIN_NAME}
