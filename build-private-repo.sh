@@ -10,9 +10,9 @@ cp -r ${SCRIPTDIR}/download-product-configs/ ~/${GITHUB_PRIVATE_REPO_NAME}/
 cp -r ${SCRIPTDIR}/config/ ~/${GITHUB_PRIVATE_REPO_NAME}/
 cp -r ${SCRIPTDIR}/state/ ~/${GITHUB_PRIVATE_REPO_NAME}/
 
-mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/vars
-mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/env
-mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/config
+mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars
+mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env
+mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config
 
 cat > ~/${GITHUB_PRIVATE_REPO_NAME}/ci/pipeline-vars.yml << EOF
 ---
