@@ -30,10 +30,10 @@ resources:
     json_key: |
       ((gcp_credentials))    
 
-- name: opsman-image
+- name: opsman-product
   type: gcs
   source:
-    regexp: ((opsman_image_s3_versioned_regexp)) # vsphere ex: pcf-vsphere-(.*).ova
+    regexp: OpsManager(.*)onGCP.yml
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))    
@@ -94,14 +94,14 @@ jobs:
           - get: platform-automation-tasks
             params:
               unpack: true
-          - get: opsman-image
+          - get: opsman-product
           - get: configuration
           - get: variable
       - task: create-vm
         image: platform-automation-image
         file: platform-automation-tasks/tasks/create-vm.yml
         input_mapping:
-          image: opsman-image
+          image: opsman-product
           state: configuration
           config: configuration
           vars: variable
@@ -215,7 +215,7 @@ jobs:
           - get: platform-automation-tasks
             params:
               unpack: true
-          - get: opsman-image
+          - get: opsman-product
           - get: installation
             passed: [ export-installation ]
           - get: configuration
@@ -224,7 +224,7 @@ jobs:
         image: platform-automation-image
         file: platform-automation-tasks/tasks/upgrade-opsman.yml
         input_mapping:
-          image: opsman-image
+          image: opsman-product
           state: configuration
           config: configuration
           env: configuration
