@@ -269,23 +269,6 @@ jobs:
       params:
         ENV_FILE: ((foundation))/env/env.yml
 
-- name: staged-director-config
-  serial: true
-  plan:
-    - aggregate:
-        - get: platform-automation-tasks
-          params: {unpack: true}
-        - get: platform-automation-image
-          params: {unpack: true}
-        - get: configuration
-    - task: staged-director-config
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/staged-director-config.yml
-      input_mapping:
-        env: configuration
-      params:
-        ENV_FILE: ((foundation))/env/env.yml
-
 - name: export-installation
   serial: true
   plan:
@@ -463,24 +446,4 @@ jobs:
       input_mapping:
         env: configuration
       params:
-        ENV_FILE: ((foundation))/env/env.yml
-
-- name: staged-pks-config
-  plan:
-    - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: configuration
-        - get: variable
-    - task: staged-config
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/staged-config.yml
-      input_mapping:
-        env: configuration
-      params:
-        PRODUCT_NAME: pivotal-container-service
         ENV_FILE: ((foundation))/env/env.yml
