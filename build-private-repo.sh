@@ -14,7 +14,7 @@ mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env
 cp -r ${SCRIPTDIR}/config/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
 cp -r ${SCRIPTDIR}/state/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/ci/pipeline-vars.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml << EOF
 ---
 configuration:
   private_key: |
