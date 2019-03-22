@@ -1,0 +1,166 @@
+---
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+    
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+resources:
+- name: daily
+  type: time
+  source:
+    interval: 24h
+
+- name: config
+  type: git
+  source:
+    private_key: ((configuration.private_key))
+    uri: ((configuration.uri))
+    branch: master
+    submodules: all
+    depth: 1
+
+- name: opsman-product
+  type: gcs
+  source:
+    regexp: OpsManager(.*)onGCP.yml
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
+
+- name: pks-product
+  type: gcs
+  source:
+    regexp: pivotal-container-service-(.*).pivotal
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
+
+- name: pks-stemcell
+  type: gcs
+  source:
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
+
+- name: platform-automation-pivnet
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: 2\.(.*)
+    sort_by: semver
+
+- name: platform-automation-tasks
+  type: gcs
+  source:
+    regexp: platform-automation-tasks-(.*).zip
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
+
+- name: platform-automation-image
+  type: gcs
+  source:
+    regexp: platform-automation-image-(.*).tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))    
+
+jobs:
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "((foundation))/download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/download-product-configs/opsman.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
+
+- name: fetch-pks
+  plan:
+  - aggregate:
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "((foundation))/download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-pks-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/download-product-configs/pks.yml
+    output_mapping: {downloaded-stemcell: pks-stemcell}
+  - aggregate:
+    - put: pks-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: pks-stemcell
+      params:
+        file: pks-stemcell/*.tgz
+
+- name: fetch-platform-automation
+  # We use the pivnet resource to bootstrap the pipeline,
+  # and because this product is part of the pipeline, not the foundation
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+  - aggregate:
+    - put: platform-automation-tasks
+      params:
+        file: platform-automation-pivnet/*tasks*.zip
+    - put: platform-automation-image
+      params:
+        file: platform-automation-pivnet/*image*.tgz
