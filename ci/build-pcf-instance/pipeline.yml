@@ -101,42 +101,42 @@ resources:
     uri: ((variable.uri))
     branch: master
 
-# jobs:
-# - name: fetch-opsman
-#   plan:
-#   - aggregate:
-#     - get: daily-trigger
-#       trigger: true
-#     - get: platform-automation-image
-#       params:
-#         unpack: true
-#     - get: platform-automation-tasks
-#       params:
-#         unpack: true
-#     - get: config
-#   - task: credhub-interpolate
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/credhub-interpolate.yml
-#     params:
-#       CREDHUB_CA_CERT: ((credhub-ca-cert))
-#       CREDHUB_CLIENT: ((credhub-client))
-#       CREDHUB_SECRET: ((credhub-secret))
-#       CREDHUB_SERVER: ((credhub-server))
-#       PREFIX: '/pipeline/google'
-#       INTERPOLATION_PATH: "((foundation))/download-product-configs"
-#     input_mapping:
-#       files: config
-#     output_mapping:
-#       interpolated-files: config
-#   - task: download-opsman-image
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/download-product.yml
-#     params:
-#       CONFIG_FILE: ((foundation))/download-product-configs/opsman.yml
-#   - aggregate:
-#     - put: opsman-product
-#       params:
-#         file: downloaded-product/*
+jobs:
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "((foundation))/download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/download-product-configs/opsman.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
 
 # - name: fetch-pks
 #   plan:
