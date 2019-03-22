@@ -385,8 +385,8 @@ Set and unpause the pipeline:
 
 ```bash
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p fetch-dependencies -n \
-  -c ~/${GITHUB_PRIVATE_REPO_NAME}/ci/fetch-dependencies/pipeline.yml \
-  -l ~/${GITHUB_PRIVATE_REPO_NAME}/ci/pipeline-vars.yml
+  -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/fetch-dependencies/pipeline.yml \
+  -l ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml
 
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p fetch-dependencies
 ```
@@ -402,8 +402,8 @@ Set and unpause the pipeline:
 
 ```bash
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p install-opsman-and-products -n \
-  -c ~/${GITHUB_PRIVATE_REPO_NAME}/ci/install-opsman-and-products/pipeline.yml \
-  -l ~/${GITHUB_PRIVATE_REPO_NAME}/ci/pipeline-vars.yml
+  -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/install-opsman-and-products/pipeline.yml \
+  -l ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml
 
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p install-opsman-and-products
 ```
