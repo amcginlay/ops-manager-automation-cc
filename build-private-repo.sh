@@ -36,7 +36,7 @@ $(echo $CREDHUB_CA_CERT | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ 
 credhub-client: ${CREDHUB_CLIENT}
 credhub-secret: ${CREDHUB_SECRET}
 credhub-server: ${CREDHUB_SERVER}
-opsman_image_s3_versioned_regexp: OpsManager(.*)onGCP.yml
+opsman_image_versioned_regexp: OpsManager(.*)onGCP.yml
 foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
 
