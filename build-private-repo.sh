@@ -5,7 +5,7 @@ SCRIPTDIR=$(cd $(dirname "$0") && pwd -P)
 source ~/.env
 
 rm -rf ~/${GITHUB_PRIVATE_REPO_NAME}/*
-cp -r ${SCRIPTDIR}/ci/ ~/${GITHUB_PRIVATE_REPO_NAME}/
+cp -r ${SCRIPTDIR}/ci/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
 cp -r ${SCRIPTDIR}/download-product-configs/ ~/${GITHUB_PRIVATE_REPO_NAME}/
 
 mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars
