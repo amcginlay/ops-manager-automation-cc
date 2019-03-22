@@ -388,7 +388,7 @@ fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p build-pcf-instance -n
   -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline.yml \
   -l ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml
 
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p fetch-dependencies
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p build-pcf-instance
 ```
 
 This should begin to execute in ~60 seconds.
