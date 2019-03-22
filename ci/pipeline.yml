@@ -290,6 +290,8 @@ jobs:
   serial: true
   plan:
     - aggregate:
+        - get: one-time-trigger
+          passed: [ install-opsman ]
         - get: daily-trigger
           trigger: true
         - get: platform-automation-image
