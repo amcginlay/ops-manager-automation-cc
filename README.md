@@ -379,13 +379,13 @@ Push these changes up into the private repo:
 credhub set -n /pipeline/google/pivnet-api-token -t value -v ${PIVNET_UAA_REFRESH_TOKEN}
 ```
 
-## Set The `fetch-dependencies` pipeline
+## Set The `build-pcf-instance` pipeline
 
 Set and unpause the pipeline:
 
 ```bash
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p fetch-dependencies -n \
-  -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/fetch-dependencies/pipeline.yml \
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p build-pcf-instance -n \
+  -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline.yml \
   -l ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml
 
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p fetch-dependencies
@@ -396,16 +396,6 @@ This should begin to execute in ~60 seconds.
 Be aware that you may be required to manually accept the PivNet EULAs before a product can be downloaded
 so watch for pipeline failures which contain the necessary URLs to follow.
 
-## Set The `install-opsman-and-products` pipeline
-
-Set and unpause the pipeline:
-
-```bash
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p install-opsman-and-products -n \
-  -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/install-opsman-and-products/pipeline.yml \
-  -l ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml
-
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p install-opsman-and-products
-```
-
-This should begin to execute in ~60 seconds.
+You may also observe that on the first run, the `export-installation` job will fail because the Ops Manager
+is missing.
+Run this job manually once the `install-opsman` job has run successfully.
