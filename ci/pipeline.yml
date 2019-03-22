@@ -1,0 +1,484 @@
+---
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+resources:
+- name: daily-trigger
+  type: time
+  source:
+    interval: 24h
+
+- name: one-time-trigger
+  type: time
+  source:
+    interval: 999999h
+
+- name: config
+  type: git
+  source:
+    private_key: ((configuration.private_key))
+    uri: ((configuration.uri))
+    branch: master
+    submodules: all
+    depth: 1
+
+- name: platform-automation-pivnet
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: 2\.(.*)
+    sort_by: semver
+
+- name: opsman-product
+  type: gcs
+  source:
+    regexp: OpsManager(.*)onGCP.yml
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
+- name: pks-product
+  type: gcs
+  source:
+    regexp: pivotal-container-service-(.*).pivotal
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
+- name: pks-stemcell
+  type: gcs
+  source:
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
+- name: platform-automation-tasks
+  type: gcs
+  source:
+    regexp: platform-automation-tasks-(.*).zip
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
+- name: platform-automation-image
+  type: gcs
+  source:
+    regexp: platform-automation-image-(.*).tgz
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
+- name: installation
+  type: gcs
+  source:
+    regexp: installation-(.*).zip
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
+- name: configuration
+  type: git
+  source:
+    private_key: ((configuration.private_key))
+    uri: ((configuration.uri))
+    branch: master
+
+- name: variable
+  type: git
+  source:
+    private_key: ((variable.private_key))
+    uri: ((variable.uri))
+    branch: master
+
+jobs:
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "((foundation))/download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/download-product-configs/opsman.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
+
+- name: fetch-pks
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: "((foundation))/download-product-configs"
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-pks-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/download-product-configs/pks.yml
+    output_mapping: {downloaded-stemcell: pks-stemcell}
+  - aggregate:
+    - put: pks-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: pks-stemcell
+      params:
+        file: pks-stemcell/*.tgz
+
+- name: fetch-platform-automation
+  # We use the pivnet resource to bootstrap the pipeline,
+  # and because this product is part of the pipeline, not the foundation
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+  - aggregate:
+    - put: platform-automation-tasks
+      params:
+        file: platform-automation-pivnet/*tasks*.zip
+    - put: platform-automation-image
+      params:
+        file: platform-automation-pivnet/*image*.tgz
+
+- name: install-opsman
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - aggregate:
+        - get: platform-automation-image
+          params:
+            unpack: true
+        - get: one-time-trigger
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: opsman-product
+        - get: configuration
+        - get: variable
+    - task: create-vm
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/create-vm.yml
+      input_mapping:
+        image: opsman-product
+        state: configuration
+        config: configuration
+        vars: variable
+      params:
+        VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
+        STATE_FILE: ((foundation))/state/state.yml
+        OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      ensure: &make-state-commit
+        do:
+          - task: make-commit
+            image: platform-automation-image
+            file: platform-automation-tasks/tasks/make-git-commit.yml
+            input_mapping:
+              repository: configuration
+              file-source: generated-state
+            output_mapping:
+              repository-commit: configuration-commit
+            params:
+              FILE_SOURCE_PATH: state.yml
+              FILE_DESTINATION_PATH: ((foundation))/state/state.yml
+              GIT_AUTHOR_EMAIL: "pcf-pipeline-bot@example.com"
+              GIT_AUTHOR_NAME: "Platform Automation Bot"
+              COMMIT_MESSAGE: 'Update state file'
+          - put: configuration
+            params:
+              repository: configuration-commit
+              merge: true
+    - task: configure-authentication
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-authentication.yml
+      attempts: 10
+      input_mapping:
+        env: configuration
+        config: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+        AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
+    - task: configure-director
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-director.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+        vars: variable
+      params:
+        VARS_FILES: vars/((foundation))/vars/director-vars.yml
+        ENV_FILE: ((foundation))/env/env.yml
+        DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
+    - task: apply-director-changes
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/apply-director-changes.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: staged-director-config
+  serial: true
+  plan:
+    - aggregate:
+        - get: platform-automation-tasks
+          params: {unpack: true}
+        - get: platform-automation-image
+          params: {unpack: true}
+        - get: configuration
+    - task: staged-director-config
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/staged-director-config.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: export-installation
+  serial: true
+  plan:
+    - aggregate:
+        - get: daily-trigger
+          trigger: true
+        - get: platform-automation-image
+          params:
+            unpack: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: configuration
+        - get: variable
+    - task: export-installation
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/export-installation.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+        INSTALLATION_FILE: installation-$timestamp.zip
+    - put: installation
+      params:
+        file: installation/installation*.zip
+
+- name: upgrade-opsman
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - aggregate:
+        - get: one-time-trigger
+          passed: [ install-opsman ]
+        - get: platform-automation-image
+          params:
+            unpack: true
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: opsman-product
+        - get: installation
+          passed: [ export-installation ]
+        - get: configuration
+        - get: variable
+    - task: upgrade-opsman
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upgrade-opsman.yml
+      input_mapping:
+        image: opsman-product
+        state: configuration
+        config: configuration
+        env: configuration
+        vars: variable
+      params:
+        VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
+        ENV_FILE: ((foundation))/env/env.yml
+        OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+        STATE_FILE: ((foundation))/state/state.yml
+      ensure: *make-state-commit
+    - task: apply-director-changes
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/apply-director-changes.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: upload-and-stage-pks
+  serial: true
+  plan:
+    - aggregate:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          passed:
+            - upgrade-opsman
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: pks-product
+        - get: configuration
+        - get: variable
+    - task: upload-product
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-product.yml
+      input_mapping:
+        product: pks-product
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+    - task: stage-product
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/stage-product.yml
+      input_mapping:
+        product: pks-product
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: configure-pks
+  serial: true
+  plan:
+    - aggregate:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          passed:
+            - upload-and-stage-pks
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: configuration
+        - get: variable
+    - task: configure-pks
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-product.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+        vars: variable
+      params:
+        CONFIG_FILE: ((foundation))/config/pivotal-container-service.yml
+        VARS_FILES: vars/((foundation))/vars/pivotal-container-service-vars.yml
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: upload-stemcells
+  serial: true
+  plan:
+    - aggregate:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          passed:
+            - upgrade-opsman
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: pks-stemcell
+          trigger: true
+        - get: configuration
+        - get: variable
+    - task: upload-pks-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-stemcell.yml
+      input_mapping:
+        env: configuration
+        stemcell: pks-stemcell
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: apply-product-changes
+  serial: true
+  plan:
+    - aggregate:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          passed:
+            - configure-pks
+          trigger: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: configuration
+        - get: variable
+    - task: apply-product-changes
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/apply-changes.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+
+- name: staged-pks-config
+  plan:
+    - aggregate:
+        - get: platform-automation-image
+          params:
+            unpack: true
+        - get: platform-automation-tasks
+          params:
+            unpack: true
+        - get: configuration
+        - get: variable
+    - task: staged-config
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/staged-config.yml
+      input_mapping:
+        env: configuration
+      params:
+        PRODUCT_NAME: pivotal-container-service
+        ENV_FILE: ((foundation))/env/env.yml
