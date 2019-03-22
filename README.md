@@ -370,7 +370,7 @@ tree ~/${GITHUB_PRIVATE_REPO_NAME}
 Push these changes up into the private repo:
 
 ```bash
-(cd ${GITHUB_PRIVATE_REPO_NAME} && git add . && git commit -m "initial" && git push)
+(cd ${GITHUB_PRIVATE_REPO_NAME} && git commit -a -m "initial" && git push)
 ```
 
 ## Store secrets in Credhub
