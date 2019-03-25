@@ -114,7 +114,7 @@ wget -O credhub.tgz https://github.com/cloudfoundry-incubator/credhub-cli/releas
   sudo mv credhub /usr/local/bin && \
   rm credhub.tgz
 
-TF_VERSION=0.11.11
+TF_VERSION=0.11.13
 wget -O terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip && \
   unzip terraform.zip && \
   sudo mv terraform /usr/local/bin && \
