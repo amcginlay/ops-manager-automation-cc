@@ -224,6 +224,7 @@ jobs:
       file: platform-automation-tasks/tasks/create-vm.yml
       input_mapping:
         image: opsman-product
+        state: state
         config: configuration
         vars: variable
       params:
