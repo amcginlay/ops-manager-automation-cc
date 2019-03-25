@@ -221,7 +221,7 @@ terraform init
 terraform apply --auto-approve
 ```
 
-Note the `opsman_vm = 0` setting which prohibits Terraform from deploying the Ops Manager VM.
+Note the `opsman_image_url != ""` setting which prohibits Terraform from deploying the Ops Manager VM.
 The Concourse pipelines will take responsibility for this.
 
 This will take about 5-10 mins to complete.
