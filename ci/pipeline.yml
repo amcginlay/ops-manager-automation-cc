@@ -274,7 +274,7 @@ jobs:
   plan:
     - aggregate:
         - get: one-time-trigger
-          passed: [ install-opsman ]
+#           passed: [ install-opsman ]
         - get: daily-trigger
           trigger: true
         - get: platform-automation-image
@@ -303,7 +303,7 @@ jobs:
   plan:
     - aggregate:
         - get: one-time-trigger
-          passed: [ install-opsman ]
+#           passed: [ install-opsman ]
         - get: platform-automation-image
           params:
             unpack: true
