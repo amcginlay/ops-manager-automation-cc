@@ -120,7 +120,7 @@ wget -O terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/ter
   sudo mv terraform /usr/local/bin && \
   rm terraform.zip
   
-TGCP_VERSION=0.63.0
+TGCP_VERSION=0.74.0
 wget -O terraforming-gcp.tar.gz https://github.com/pivotal-cf/terraforming-gcp/releases/download/v${TGCP_VERSION}/terraforming-gcp-v${TGCP_VERSION}.tar.gz && \
   tar -zxvf terraforming-gcp.tar.gz && \
   rm terraforming-gcp.tar.gz
