@@ -197,21 +197,6 @@ EOF
 cat ${DOMAIN}.host.crt ${DOMAIN}.ca.crt > ${DOMAIN}.crt
 ```
 
-## Identify an Ops Manager image (required but unused)
-
-```bash
-RELEASE_VERSION=2.4.5 # verify this version is still published
-pivnet login --api-token=${PIVNET_UAA_REFRESH_TOKEN}
-pivnet download-product-files \
-  --product-slug=ops-manager \
-  --release-version=${RELEASE_VERSION} \
-  --glob='OpsManager*onGCP.yml'
-
-OPSMAN_IMAGE=$(bosh interpolate OpsManager*onGCP.yml --path /us)
-```
-
-Verify that `OPSMAN_IMAGE` contains a value before continuing.
-
 ## Terraform the infrastructure
 
 ```bash
@@ -223,8 +208,7 @@ env_name            = "${PKS_SUBDOMAIN_NAME}"
 region              = "us-central1"
 zones               = ["us-central1-b", "us-central1-a", "us-central1-c"]
 project             = "$(gcloud config get-value core/project)"
-opsman_image_url    = "https://storage.googleapis.com/${OPSMAN_IMAGE}"
-opsman_vm           = 0
+opsman_image_url    != ""
 create_gcs_buckets  = "false"
 external_database   = 0
 isolation_segment   = "false"
