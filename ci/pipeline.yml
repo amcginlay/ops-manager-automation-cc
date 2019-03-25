@@ -217,6 +217,8 @@ jobs:
         - get: configuration
         - get: variable
         - put: state
+          params:
+            file: ((foundation))/state/state.yml
     - task: create-vm
       image: platform-automation-image
       file: platform-automation-tasks/tasks/create-vm.yml
