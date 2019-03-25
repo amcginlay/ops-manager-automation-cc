@@ -34,7 +34,7 @@ resources:
 - name: state
   type: gcs
   source:
-    regexp: amcginlay/state/state.yml
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
