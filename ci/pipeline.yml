@@ -34,7 +34,6 @@ resources:
 - name: state
   type: gcs
   source:
-    regexp: ((foundation))/state/state.yml
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
