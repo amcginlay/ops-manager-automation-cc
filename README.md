@@ -383,3 +383,15 @@ so watch for pipeline failures which contain the necessary URLs to follow.
 You may also observe that on the first run, the `export-installation` job will fail because the Ops Manager
 is missing.
 Run this job manually once the `install-opsman` job has run successfully.
+
+## Teardown
+
+Use the installation dashboard to delete the installation, manually delete the Ops Manager VM then execute the following:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
+  control-tower destroy \
+    --region us-central1 \
+    --iaas gcp \
+    ${PKS_SUBDOMAIN_NAME}
+```
