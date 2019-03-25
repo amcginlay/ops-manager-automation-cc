@@ -216,6 +216,7 @@ jobs:
         - get: opsman-product
         - get: configuration
         - get: variable
+        - get: state
         - put: state
           params:
             file: ((foundation))/state/state.yml
