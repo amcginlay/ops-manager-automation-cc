@@ -31,13 +31,13 @@ resources:
 #     submodules: all
 #     depth: 1
 
-# - name: state
-#   type: gcs
-#   source:
-#     versioned_file: state.yml
-#     bucket: ((gcs.buckets.pivnet_products))
-#     json_key: |
-#       ((gcp_credentials))
+- name: state
+  type: gcs
+  source:
+    versioned_file: state.yml
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
 
 # - name: platform-automation-pivnet
 #   type: pivnet
@@ -216,13 +216,13 @@ jobs:
         - get: opsman-product
         - get: configuration
         - get: variable
-#         - get: state
+        - get: state
     - task: create-vm
       image: platform-automation-image
       file: platform-automation-tasks/tasks/create-vm.yml
       input_mapping:
         image: opsman-product
-        state: ""
+        state: state
         config: configuration
         vars: variable
       params:
