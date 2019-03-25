@@ -12,24 +12,24 @@ resource_types:
     repository: frodenas/gcs-resource
 
 resources:
-- name: daily-trigger
-  type: time
-  source:
-    interval: 24h
+# - name: daily-trigger
+#   type: time
+#   source:
+#     interval: 24h
 
 - name: one-time-trigger
   type: time
   source:
     interval: 999999h
 
-- name: config
-  type: git
-  source:
-    private_key: ((configuration.private_key))
-    uri: ((configuration.uri))
-    branch: master
-    submodules: all
-    depth: 1
+# - name: config
+#   type: git
+#   source:
+#     private_key: ((configuration.private_key))
+#     uri: ((configuration.uri))
+#     branch: master
+#     submodules: all
+#     depth: 1
 
 - name: state
   type: gcs
@@ -39,13 +39,13 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: platform-automation-pivnet
-  type: pivnet
-  source:
-    api_token: ((pivnet_token))
-    product_slug: platform-automation
-    product_version: 2\.(.*)
-    sort_by: semver
+# - name: platform-automation-pivnet
+#   type: pivnet
+#   source:
+#     api_token: ((pivnet_token))
+#     product_slug: platform-automation
+#     product_version: 2\.(.*)
+#     sort_by: semver
 
 - name: opsman-product
   type: gcs
