@@ -17,10 +17,10 @@ resources:
 #   source:
 #     interval: 24h
 
-- name: one-time-trigger
-  type: time
-  source:
-    interval: 999999h
+# - name: one-time-trigger
+#   type: time
+#   source:
+#     interval: 999999h
 
 # - name: config
 #   type: git
@@ -208,8 +208,8 @@ jobs:
         - get: platform-automation-image
           params:
             unpack: true
-        - get: one-time-trigger
-          trigger: true
+#         - get: one-time-trigger
+#           trigger: true
         - get: platform-automation-tasks
           params:
             unpack: true
