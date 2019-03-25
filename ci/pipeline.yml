@@ -47,21 +47,21 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: pks-product
-  type: gcs
-  source:
-    regexp: pivotal-container-service-(.*).pivotal
-    bucket: ((gcs.buckets.pivnet_products))
-    json_key: |
-      ((gcp_credentials))
+# - name: pks-product
+#   type: gcs
+#   source:
+#     regexp: pivotal-container-service-(.*).pivotal
+#     bucket: ((gcs.buckets.pivnet_products))
+#     json_key: |
+#       ((gcp_credentials))
 
-- name: pks-stemcell
-  type: gcs
-  source:
-    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
-    bucket: ((gcs.buckets.pivnet_products))
-    json_key: |
-      ((gcp_credentials))
+# - name: pks-stemcell
+#   type: gcs
+#   source:
+#     regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+#     bucket: ((gcs.buckets.pivnet_products))
+#     json_key: |
+#       ((gcp_credentials))
 
 - name: platform-automation-tasks
   type: gcs
@@ -79,13 +79,13 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: installation
-  type: gcs
-  source:
-    regexp: installation-(.*).zip
-    bucket: ((gcs.buckets.pivnet_products))
-    json_key: |
-      ((gcp_credentials))
+# - name: installation
+#   type: gcs
+#   source:
+#     regexp: installation-(.*).zip
+#     bucket: ((gcs.buckets.pivnet_products))
+#     json_key: |
+#       ((gcp_credentials))
 
 - name: configuration
   type: git
