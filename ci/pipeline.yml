@@ -217,22 +217,20 @@ jobs:
         - get: configuration
         - get: variable
         - get: state
+
+
+    - task: test-show-contents
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source: { repository: busybox }
+        run:
+          path: find
+          args: ["."]
         
         
-  - task: test-show-contents
-    config:
-      inputs:
-      - name: state
-      platform: linux
-      image_resource:
-        type: registry-image
-        source: { repository: busybox }
-      run:
-        path: find
-        args: ["."]
-        
-        
-  - task: create-vm
+    - task: create-vm
       image: platform-automation-image
       file: platform-automation-tasks/tasks/create-vm.yml
       input_mapping:
