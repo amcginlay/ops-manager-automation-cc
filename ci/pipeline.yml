@@ -308,12 +308,13 @@ jobs:
           passed: [ export-installation ]
         - get: configuration
         - get: variable
+        - get: state
     - task: upgrade-opsman
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upgrade-opsman.yml
       input_mapping:
         image: opsman-product
-        state: configuration
+        state: state
         config: configuration
         env: configuration
         vars: variable
@@ -322,7 +323,9 @@ jobs:
         ENV_FILE: ((foundation))/env/env.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
         STATE_FILE: ((foundation))/state/state.yml
-      ensure: *make-state-commit
+    - put: state
+      params:
+        file: generated-state/state.yml
     - task: apply-director-changes
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-director-changes.yml
