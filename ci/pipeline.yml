@@ -31,6 +31,14 @@ resources:
     submodules: all
     depth: 1
 
+- name: state
+  type: gcs
+  source:
+    versioned_file: state.yml
+    bucket: ((gcs.buckets.pivnet_products))
+    json_key: |
+      ((gcp_credentials))
+
 - name: platform-automation-pivnet
   type: pivnet
   source:
@@ -208,38 +216,22 @@ jobs:
         - get: opsman-product
         - get: configuration
         - get: variable
+        - get: state
     - task: create-vm
       image: platform-automation-image
       file: platform-automation-tasks/tasks/create-vm.yml
       input_mapping:
         image: opsman-product
-        state: configuration
+        state: state
         config: configuration
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
         STATE_FILE: ((foundation))/state/state.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
-      ensure: &make-state-commit
-        do:
-          - task: make-commit
-            image: platform-automation-image
-            file: platform-automation-tasks/tasks/make-git-commit.yml
-            input_mapping:
-              repository: configuration
-              file-source: generated-state
-            output_mapping:
-              repository-commit: configuration-commit
-            params:
-              FILE_SOURCE_PATH: state.yml
-              FILE_DESTINATION_PATH: ((foundation))/state/state.yml
-              GIT_AUTHOR_EMAIL: "pcf-pipeline-bot@example.com"
-              GIT_AUTHOR_NAME: "Platform Automation Bot"
-              COMMIT_MESSAGE: 'Update state file'
-          - put: configuration
-            params:
-              repository: configuration-commit
-              merge: true
+    - put: state
+      params:
+        file: generated-state/state.yml
     - task: configure-authentication
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-authentication.yml
