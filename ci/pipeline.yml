@@ -244,7 +244,7 @@ jobs:
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
-        STATE_FILE: ((foundation))/state/state.yml
+        STATE_FILE: state/state.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
     - put: state
       params:
@@ -339,7 +339,7 @@ jobs:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
         ENV_FILE: ((foundation))/env/env.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
-        STATE_FILE: ((foundation))/state/state.yml
+        STATE_FILE: state/state.yml
     - put: state
       params:
         file: generated-state/state.yml
