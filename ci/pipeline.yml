@@ -221,6 +221,10 @@ jobs:
 
     - task: test-show-contents
       config:
+        inputs:
+        - name: configuration
+        - name: variable
+        - name: state
         platform: linux
         image_resource:
           type: registry-image
