@@ -216,7 +216,7 @@ jobs:
         - get: opsman-product
         - get: configuration
         - get: variable
-        - get: state
+#         - get: state
 
 
 #     - task: test-show-contents
@@ -239,7 +239,7 @@ jobs:
       file: platform-automation-tasks/tasks/create-vm.yml
       input_mapping:
         image: opsman-product
-        state: state
+#         state: state
         config: configuration
         vars: variable
       params:
