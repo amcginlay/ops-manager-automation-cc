@@ -292,7 +292,7 @@ fly -t control-tower-${PKS_SUBDOMAIN_NAME} login --insecure --username admin --p
 
 ```bash
 gsutil mb -c regional -l us-central1 gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
-#gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
+gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
 ```
 
 ## Create and register a GitHub SSH key for the jumpbox
