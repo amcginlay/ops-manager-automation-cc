@@ -34,7 +34,7 @@ resources:
 - name: state
   type: gcs
   source:
-    versioned_file: state.yml
+    versioned_file: ((foundation)/state/state.yml
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
