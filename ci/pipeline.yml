@@ -219,19 +219,19 @@ jobs:
         - get: state
 
 
-    - task: test-show-contents
-      config:
-        inputs:
-        - name: configuration
-        - name: variable
-        - name: state
-        platform: linux
-        image_resource:
-          type: registry-image
-          source: { repository: busybox }
-        run:
-          path: find
-          args: ["."]
+#     - task: test-show-contents
+#       config:
+#         inputs:
+#         - name: configuration
+#         - name: variable
+#         - name: state
+#         platform: linux
+#         image_resource:
+#           type: registry-image
+#           source: { repository: busybox }
+#         run:
+#           path: find
+#           args: ["."]
         
         
     - task: create-vm
@@ -244,7 +244,6 @@ jobs:
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
-        STATE_FILE: state.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
     - put: state
       params:
@@ -325,7 +324,7 @@ jobs:
           passed: [ export-installation ]
         - get: configuration
         - get: variable
-        - get: state
+#         - get: state
     - task: upgrade-opsman
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upgrade-opsman.yml
@@ -339,7 +338,6 @@ jobs:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
         ENV_FILE: ((foundation))/env/env.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
-        STATE_FILE: state.yml
     - put: state
       params:
         file: generated-state/state.yml
