@@ -237,7 +237,10 @@ jobs:
         args:
         - "-c"
         - |
-          find .
+          cat ./config/amcginlay/config/auth.yml
+          cat ./config/amcginlay/config/director.yml
+          cat ./config/amcginlay/config/opsman.yml
+          cat ./config/amcginlay/config/pivotal-container-service.yml
 
   - task: create-vm
     image: platform-automation-image
