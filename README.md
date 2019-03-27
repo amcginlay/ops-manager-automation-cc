@@ -370,7 +370,7 @@ credhub set -n /pipeline/google/opsman-public-ip -t value -v "$(dig +short pcf.$
 credhub set -n /pipeline/google/domain-crt -t certificate -c ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt
 credhub set -n /pipeline/google/domain-key -t ssh -p ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key
 
-credhub set -n /pipeline/google/gcp-credentials -t json -v "$(cat ~/gcp_credentials.json)"
+credhub set -n /pipeline/google/gcp-credentials -t value -v "$(cat ~/gcp_credentials.json)" # NOT JSON TYPE!
 ```
 
 ## Set The `build-pcf-instance` pipeline
