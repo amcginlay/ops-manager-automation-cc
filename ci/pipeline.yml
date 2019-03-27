@@ -324,7 +324,7 @@ jobs:
           passed: [ export-installation ]
         - get: configuration
         - get: variable
-#         - get: state
+        - get: state
     - task: upgrade-opsman
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upgrade-opsman.yml
