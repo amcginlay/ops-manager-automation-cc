@@ -222,6 +222,23 @@ jobs:
       files: config
     output_mapping:
       interpolated-files: config
+
+  - task: check-interpolated-config
+    config:
+      inputs:
+      - name: config
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox
+      run:
+        path: ash
+        args:
+        - "-c"
+        - |
+          find .
+
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
