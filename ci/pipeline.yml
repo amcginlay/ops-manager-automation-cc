@@ -25,8 +25,8 @@ resources:
 - name: config
   type: git
   source:
-    private_key: ((configuration.private_key))
-    uri: ((configuration.uri))
+    private_key: ((config.private_key))
+    uri: ((config.uri))
     branch: master
     submodules: all
     depth: 1
@@ -94,13 +94,6 @@ resources:
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
-
-- name: configuration
-  type: git
-  source:
-    private_key: ((configuration.private_key))
-    uri: ((configuration.uri))
-    branch: master
 
 - name: variable
   type: git
@@ -214,7 +207,7 @@ jobs:
           params:
             unpack: true
         - get: opsman-product
-        - get: configuration
+        - get: config
         - get: variable
         - get: state
     - task: create-vm
@@ -223,7 +216,7 @@ jobs:
       input_mapping:
         image: opsman-product
         state: state
-        config: configuration
+        config: config
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
@@ -236,8 +229,8 @@ jobs:
       file: platform-automation-tasks/tasks/configure-authentication.yml
       attempts: 10
       input_mapping:
-        env: configuration
-        config: configuration
+        env: config
+        config: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
         AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
@@ -245,8 +238,8 @@ jobs:
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-director.yml
       input_mapping:
-        config: configuration
-        env: configuration
+        config: config
+        env: config
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/director-vars.yml
@@ -256,7 +249,7 @@ jobs:
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-director-changes.yml
       input_mapping:
-        env: configuration
+        env: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
 
@@ -274,13 +267,13 @@ jobs:
         - get: platform-automation-tasks
           params:
             unpack: true
-        - get: configuration
+        - get: config
         - get: variable
     - task: export-installation
       image: platform-automation-image
       file: platform-automation-tasks/tasks/export-installation.yml
       input_mapping:
-        env: configuration
+        env: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
         INSTALLATION_FILE: installation-$timestamp.zip
@@ -305,7 +298,7 @@ jobs:
         - get: opsman-product
         - get: installation
           passed: [ export-installation ]
-        - get: configuration
+        - get: config
         - get: variable
         - get: state
     - task: upgrade-opsman
@@ -314,8 +307,8 @@ jobs:
       input_mapping:
         image: opsman-product
         state: state
-        config: configuration
-        env: configuration
+        config: config
+        env: config
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
@@ -328,7 +321,7 @@ jobs:
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-director-changes.yml
       input_mapping:
-        env: configuration
+        env: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
 
@@ -346,14 +339,14 @@ jobs:
           params:
             unpack: true
         - get: pks-product
-        - get: configuration
+        - get: config
         - get: variable
     - task: upload-product
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-product.yml
       input_mapping:
         product: pks-product
-        env: configuration
+        env: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
     - task: stage-product
@@ -361,7 +354,7 @@ jobs:
       file: platform-automation-tasks/tasks/stage-product.yml
       input_mapping:
         product: pks-product
-        env: configuration
+        env: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
 
@@ -378,14 +371,14 @@ jobs:
         - get: platform-automation-tasks
           params:
             unpack: true
-        - get: configuration
+        - get: config
         - get: variable
     - task: configure-pks
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
-        config: configuration
-        env: configuration
+        config: config
+        env: config
         vars: variable
       params:
         CONFIG_FILE: ((foundation))/config/pivotal-container-service.yml
@@ -407,13 +400,13 @@ jobs:
             unpack: true
         - get: pks-stemcell
           trigger: true
-        - get: configuration
+        - get: config
         - get: variable
     - task: upload-pks-stemcell
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-stemcell.yml
       input_mapping:
-        env: configuration
+        env: config
         stemcell: pks-stemcell
       params:
         ENV_FILE: ((foundation))/env/env.yml
@@ -431,12 +424,12 @@ jobs:
         - get: platform-automation-tasks
           params:
             unpack: true
-        - get: configuration
+        - get: config
         - get: variable
     - task: apply-product-changes
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-changes.yml
       input_mapping:
-        env: configuration
+        env: config
       params:
         ENV_FILE: ((foundation))/env/env.yml
