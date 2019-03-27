@@ -362,6 +362,13 @@ Push these changes up into the private repo:
 
 ```bash
 credhub set -n /pipeline/google/pivnet-api-token -t value -v ${PIVNET_UAA_REFRESH_TOKEN}
+credhub set -n /pipeline/google/domain-name -t value -v ${PKS_DOMAIN_NAME}
+credhub set -n /pipeline/google/subdomain-name -t value -v ${PKS_SUBDOMAIN_NAME}
+credhub set -n /pipeline/google/gcp-credentials -t value -v "x"
+credhub set -n /pipeline/google/gcp-project-id -t value -v $(gcloud config get-value core/project)
+credhub set -n /pipeline/google/opsman-public-ip -t value -v $(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})
+credhub set -n /pipeline/google/domain-crt -t value -v "x"
+credhub set -n /pipeline/google/domain-key -t value -v "x"
 ```
 
 ## Set The `build-pcf-instance` pipeline
