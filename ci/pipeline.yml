@@ -219,9 +219,9 @@ jobs:
       PREFIX: '/pipeline/google'
       INTERPOLATION_PATH: "((foundation))/vars"
     input_mapping:
-      files: vars
+      files: variable
     output_mapping:
-      interpolated-files: vars
+      interpolated-files: variable
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
