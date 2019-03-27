@@ -90,7 +90,7 @@ resources:
 - name: installation
   type: gcs
   source:
-    regexp: installation-(.*).zip
+    regexp: installations/installation-(.*).zip
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
