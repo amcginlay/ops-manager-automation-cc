@@ -361,7 +361,14 @@ Push these changes up into the private repo:
 ## Store secrets in Credhub
 
 ```bash
-credhub set -n /pipeline/google/pivnet-api-token -t value -v ${PIVNET_UAA_REFRESH_TOKEN}
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/pivnet-api-token -t value -v ${PIVNET_UAA_REFRESH_TOKEN}
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/domain-name -t value -v "x"
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/subdomain-name -t value -v "x"
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/gcp-credentials -t value -v "x"
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/gcp-project-id -t value -v "x"
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/opsman-public-ip -t value -v "x"
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/domain-crt -t value -v "x"
+credhub set -n /pipeline/${PKS_SUBDOMAIN_NAME}/domain-key -t value -v "x"
 ```
 
 ## Set The `build-pcf-instance` pipeline
