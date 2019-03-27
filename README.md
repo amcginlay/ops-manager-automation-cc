@@ -385,6 +385,18 @@ You may also observe that on the first run, the `export-installation` job will f
 is missing.
 Run this job manually once the `install-opsman` job has run successfully.
 
+## Add a dummy state file
+
+In the current version of the Platform Automation tasks, `create-vm` requires a state file to trigger the `install-opsman` job.
+We anticipate this limitation will be resolved in due course, but for now:
+
+```bash
+echo "---" > ~/state.yml
+gsutil cp ~/state.yml gs://amcginlay-concourse-resources/${PKS_SUBDOMAIN_NAME}/
+```
+
+If required, be aware that versioned buckets require you to use `gsutil rm -a` to take files fully out of view.
+
 ## Teardown
 
 Use the installation dashboard to delete the installation, manually delete the Ops Manager VM then execute the following:

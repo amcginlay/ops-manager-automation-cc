@@ -34,7 +34,7 @@ resources:
 - name: state
   type: gcs
   source:
-    versioned_file: state.yml
+    versioned_file: ((foundation))/state.yml
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
@@ -90,7 +90,7 @@ resources:
 - name: installation
   type: gcs
   source:
-    regexp: installation-(.*).zip
+    regexp: ((foundation))/installations/installation-(.*).zip
     bucket: ((gcs.buckets.pivnet_products))
     json_key: |
       ((gcp_credentials))
@@ -227,7 +227,6 @@ jobs:
         vars: variable
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
-        STATE_FILE: ((foundation))/state/state.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
     - put: state
       params:
@@ -322,7 +321,6 @@ jobs:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
         ENV_FILE: ((foundation))/env/env.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
-        STATE_FILE: ((foundation))/state/state.yml
     - put: state
       params:
         file: generated-state/state.yml
