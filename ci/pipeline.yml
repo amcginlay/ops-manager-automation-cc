@@ -28,8 +28,6 @@ resources:
     private_key: ((config.private_key))
     uri: ((config.uri))
     branch: master
-    submodules: all
-    depth: 1
 
 - name: state
   type: gcs
