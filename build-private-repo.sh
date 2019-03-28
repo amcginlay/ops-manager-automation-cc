@@ -11,7 +11,7 @@ mkdir ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
 cp -r ${SCRIPTDIR}/ci/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
 cp -r ${SCRIPTDIR}/config/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pivotal-container-service/pipeline-vars.yml << EOF
 ---
 config:
   private_key: |
