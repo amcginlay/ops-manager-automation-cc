@@ -208,6 +208,23 @@ jobs:
       - get: config
       - get: variable
       - get: state
+
+  - task: check-interpolated-config
+    config:
+      inputs:
+      - name: config
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox
+      run:
+        path: ash
+        args:
+        - "-c"
+        - |
+          find .
+          
   - task: credhub-interpolate
     image: platform-automation-image
     file: platform-automation-tasks/tasks/credhub-interpolate.yml
