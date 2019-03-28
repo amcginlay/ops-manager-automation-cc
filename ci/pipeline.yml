@@ -217,7 +217,7 @@ jobs:
         args:
         - "-c"
         - |
-          rm -rf 
+          rm -rf ./config/amcginlay/ci/
           find .
 
   - task: credhub-interpolate-config
