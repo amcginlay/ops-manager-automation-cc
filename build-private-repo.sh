@@ -56,7 +56,7 @@ cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config/auth.yml << EOF
 ---
 username: ((om-username))
 password: ((om-password))
-decryption-passphrase: ((om-decryprion-passphrase))
+decryption-passphrase: ((om-decryption-passphrase))
 EOF
 
 echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/director-vars.yml
