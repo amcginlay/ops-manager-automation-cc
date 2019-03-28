@@ -418,22 +418,53 @@ jobs:
           unpack: true
       - get: pks-product
       - get: config
-    - task: upload-product
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/upload-product.yml
-      input_mapping:
-        product: pks-product
-        env: config
-      params:
-        ENV_FILE: ((foundation))/env/env.yml
-    - task: stage-product
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/stage-product.yml
-      input_mapping:
-        product: pks-product
-        env: config
-      params:
-        ENV_FILE: ((foundation))/env/env.yml
+  - task: zap-ci-directory
+    config:
+      inputs:
+      - name: config
+      outputs:
+      - name: config
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox
+      run:
+        path: ash
+        args:
+        - "-c"
+        - |
+          rm -rf ./config/amcginlay/ci/
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: ((foundation))
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: upload-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: pks-product
+      env: config
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+  - task: stage-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: pks-product
+      env: config
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
 
 - name: configure-pks
   serial: true
