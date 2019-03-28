@@ -106,7 +106,7 @@ jobs:
       params:
         unpack: true
     - get: config
-  - task: credhub-interpolate
+  - task: credhub-interpolate-config
     image: platform-automation-image
     file: platform-automation-tasks/tasks/credhub-interpolate.yml
     params:
@@ -115,7 +115,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings/download-product-configs
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -142,7 +142,7 @@ jobs:
       params:
         unpack: true
     - get: config
-  - task: credhub-interpolate
+  - task: credhub-interpolate-config
     image: platform-automation-image
     file: platform-automation-tasks/tasks/credhub-interpolate.yml
     params:
@@ -151,7 +151,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings/download-product-configs
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -279,7 +279,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -324,7 +324,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -376,7 +376,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -421,7 +421,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -462,7 +462,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
@@ -499,7 +499,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/settings
+      INTERPOLATION_PATH: ((foundation))/config
     input_mapping:
       files: config
     output_mapping:
