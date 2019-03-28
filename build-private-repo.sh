@@ -49,8 +49,8 @@ cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
 target: ((om-target))
 username: ((om-username))
 password: ((om-password))
-connect-timeout: 30
-request-timeout: 1800
+# connect-timeout: 30
+# request-timeout: 1800
 skip-ssl-validation: true
 EOF
 
