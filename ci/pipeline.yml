@@ -93,13 +93,6 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: variable
-  type: git
-  source:
-    private_key: ((variable.private_key))
-    uri: ((variable.uri))
-    branch: master
-
 jobs:
 - name: fetch-opsman
   plan:
@@ -206,7 +199,7 @@ jobs:
           unpack: true
       - get: opsman-product
       - get: config
-      - get: variable
+      - get: config
       - get: state
 
   - task: check-interpolated-config
@@ -246,7 +239,7 @@ jobs:
       image: opsman-product
       state: state
       config: config
-      vars: variable
+      vars: config
     params:
       VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
       OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
@@ -269,7 +262,7 @@ jobs:
     input_mapping:
       config: config
       env: config
-      vars: variable
+      vars: config
     params:
       VARS_FILES: vars/((foundation))/vars/director-vars.yml
       ENV_FILE: ((foundation))/env/env.yml
@@ -297,7 +290,6 @@ jobs:
           params:
             unpack: true
         - get: config
-        - get: variable
     - task: export-installation
       image: platform-automation-image
       file: platform-automation-tasks/tasks/export-installation.yml
@@ -328,7 +320,6 @@ jobs:
         - get: installation
           passed: [ export-installation ]
         - get: config
-        - get: variable
 #         - get: state
     - task: upgrade-opsman
       image: platform-automation-image
@@ -338,7 +329,7 @@ jobs:
         state: state
         config: config
         env: config
-        vars: variable
+        vars: config
       params:
         VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
         ENV_FILE: ((foundation))/env/env.yml
@@ -369,7 +360,6 @@ jobs:
             unpack: true
         - get: pks-product
         - get: config
-        - get: variable
     - task: upload-product
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-product.yml
@@ -401,14 +391,14 @@ jobs:
           params:
             unpack: true
         - get: config
-        - get: variable
+        - get: config
     - task: configure-pks
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
         config: config
         env: config
-        vars: variable
+        vars: config
       params:
         CONFIG_FILE: ((foundation))/config/pivotal-container-service.yml
         VARS_FILES: vars/((foundation))/vars/pivotal-container-service-vars.yml
@@ -430,7 +420,7 @@ jobs:
         - get: pks-stemcell
           trigger: true
         - get: config
-        - get: variable
+        - get: config
     - task: upload-pks-stemcell
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-stemcell.yml
@@ -454,7 +444,7 @@ jobs:
           params:
             unpack: true
         - get: config
-        - get: variable
+        - get: config
     - task: apply-product-changes
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-changes.yml
