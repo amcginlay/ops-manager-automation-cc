@@ -526,18 +526,72 @@ jobs:
 - name: upload-stemcells
   serial: true
   plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+        - upgrade-opsman
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: pks-stemcell
+      trigger: true
+    - get: config
+  - task: zap-ci-directory
+    config:
+      inputs:
+      - name: config
+      outputs:
+      - name: config
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox
+      run:
+        path: ash
+        args:
+        - "-c"
+        - |
+          rm -rf ./config/amcginlay/ci/
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: '/pipeline/google'
+      INTERPOLATION_PATH: ((foundation))
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: upload-pks-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: config
+      stemcell: pks-stemcell
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+
+- name: apply-product-changes
+  serial: true
+  plan:
     - aggregate:
       - get: platform-automation-image
         params:
           unpack: true
         passed:
-          - upgrade-opsman
+          - configure-pks
         trigger: true
       - get: platform-automation-tasks
         params:
           unpack: true
-      - get: pks-stemcell
-        trigger: true
       - get: config
 
   - task: zap-ci-directory
@@ -572,30 +626,6 @@ jobs:
     output_mapping:
       interpolated-files: config
 
-
-    - task: upload-pks-stemcell
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/upload-stemcell.yml
-      input_mapping:
-        env: config
-        stemcell: pks-stemcell
-      params:
-        ENV_FILE: ((foundation))/env/env.yml
-
-- name: apply-product-changes
-  serial: true
-  plan:
-    - aggregate:
-      - get: platform-automation-image
-        params:
-          unpack: true
-        passed:
-          - configure-pks
-        trigger: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: config
     - task: apply-product-changes
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-changes.yml
