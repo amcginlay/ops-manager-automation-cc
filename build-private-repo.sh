@@ -44,17 +44,16 @@ echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/opsman-var
 # subdomain-name: ${PKS_SUBDOMAIN_NAME}
 # EOF
 
-echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml
-# cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
-# ---
-# target: ${OM_TARGET}
-# connect-timeout: 30
-# request-timeout: 1800
-# skip-ssl-validation: ${OM_SKIP_SSL_VALIDATION}
-# username: ${OM_USERNAME}
-# password: ${OM_PASSWORD}
-# decryption-passphrase: ${OM_DECRYPTION_PASSPHRASE}
-# EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
+---
+target: ${OM_TARGET}
+connect-timeout: 30
+request-timeout: 1800
+skip-ssl-validation: ${OM_SKIP_SSL_VALIDATION}
+username: ${OM_USERNAME}
+password: ${OM_PASSWORD}
+decryption-passphrase: ${OM_DECRYPTION_PASSPHRASE}
+EOF
 
 echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config/auth.yml
 # cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config/auth.yml << EOF
