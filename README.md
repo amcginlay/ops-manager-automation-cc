@@ -371,6 +371,7 @@ credhub set -n /pipeline/google/gcp-credentials -t value -v "$(cat ~/gcp_credent
 credhub set -n /pipeline/google/om-target -t value -v "${OM_TARGET}"
 credhub set -n /pipeline/google/om-skip-ssl-validation -t value -v "${OM_SKIP_SSL_VALIDATION}"
 credhub set -n /pipeline/google/om-username -t value -v "${OM_USERNAME}"
+credhub set -n /pipeline/google/om-password -t value -v "${OM_PASSWORD}"
 credhub set -n /pipeline/google/om-decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
 
 credhub set -n /pipeline/google/domain-crt -t certificate -c ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt
