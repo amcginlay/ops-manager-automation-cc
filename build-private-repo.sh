@@ -19,10 +19,6 @@ config:
   private_key: |
 $(cat ~/.ssh/id_rsa | sed 's/^/    /')
   uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
-variable:
-  private_key: |
-$(cat ~/.ssh/id_rsa | sed 's/^/    /')
-  uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
 gcp_credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
 gcs:
@@ -38,48 +34,29 @@ credhub-server: ${CREDHUB_SERVER}
 foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/opsman-vars.yml << EOF
----
-gcp-credentials: |
-$(cat ~/gcp_credentials.json | sed 's/^/  /')
-opsman-public-ip: $(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})
-gcp-project-id: $(gcloud config get-value core/project)
-subdomain-name: ${PKS_SUBDOMAIN_NAME}
-EOF
-
 cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
 ---
-target: ${OM_TARGET}
-connect-timeout: 30
-request-timeout: 1800
-skip-ssl-validation: ${OM_SKIP_SSL_VALIDATION}
-username: ${OM_USERNAME}
-password: ${OM_PASSWORD}
-decryption-passphrase: ${OM_DECRYPTION_PASSPHRASE}
+target: ((om-target))
+username: ((om-username))
+password: ((om-password))
+skip-ssl-validation: true
 EOF
 
 cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config/auth.yml << EOF
 ---
-username: ${OM_USERNAME}
-password: ${OM_PASSWORD}
-decryption-passphrase: ${OM_DECRYPTION_PASSPHRASE}
+username: ((om-username))
+password: ((om-password))
+decryption-passphrase: ((om-decryption-passphrase))
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/director-vars.yml << EOF
----
-gcp-credentials: |
-$(cat ~/gcp_credentials.json | sed 's/^/  /')
-gcp-project-id: $(gcloud config get-value core/project)
-subdomain-name: ${PKS_SUBDOMAIN_NAME}
-EOF
-
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml << EOF
----
-gcp-project-id: $(gcloud config get-value core/project)
-subdomain-name: ${PKS_SUBDOMAIN_NAME}
-domain-name: ${PKS_DOMAIN_NAME}
-domain-crt: |
-$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt | sed 's/^/  /g')
-domain-key: |
-$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key | sed 's/^/  /g')
-EOF
+echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml
+# cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml << EOF
+# ---
+# gcp-project-id: $(gcloud config get-value core/project)
+# subdomain-name: ${PKS_SUBDOMAIN_NAME}
+# domain-name: ${PKS_DOMAIN_NAME}
+# domain-crt: |
+# $(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt | sed 's/^/  /g')
+# domain-key: |
+# $(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key | sed 's/^/  /g')
+# EOF

@@ -361,14 +361,21 @@ Push these changes up into the private repo:
 ## Store secrets in Credhub
 
 ```bash
-credhub set -n /pipeline/google/pivnet-api-token -t value -v ${PIVNET_UAA_REFRESH_TOKEN}
-credhub set -n /pipeline/google/domain-name -t value -v ${PKS_DOMAIN_NAME}
-credhub set -n /pipeline/google/subdomain-name -t value -v ${PKS_SUBDOMAIN_NAME}
-credhub set -n /pipeline/google/gcp-credentials -t value -v "x"
-credhub set -n /pipeline/google/gcp-project-id -t value -v $(gcloud config get-value core/project)
-credhub set -n /pipeline/google/opsman-public-ip -t value -v $(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})
-credhub set -n /pipeline/google/domain-crt -t value -v "x"
-credhub set -n /pipeline/google/domain-key -t value -v "x"
+credhub set -n /pipeline/google/pivnet-api-token -t value -v "${PIVNET_UAA_REFRESH_TOKEN}"
+credhub set -n /pipeline/google/domain-name -t value -v "${PKS_DOMAIN_NAME}"
+credhub set -n /pipeline/google/subdomain-name -t value -v "${PKS_SUBDOMAIN_NAME}"
+credhub set -n /pipeline/google/gcp-project-id -t value -v "$(gcloud config get-value core/project)"
+credhub set -n /pipeline/google/opsman-public-ip -t value -v "$(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})"
+credhub set -n /pipeline/google/gcp-credentials -t value -v "$(cat ~/gcp_credentials.json)" # NOT JSON TYPE!
+
+credhub set -n /pipeline/google/om-target -t value -v "${OM_TARGET}"
+credhub set -n /pipeline/google/om-skip-ssl-validation -t value -v "${OM_SKIP_SSL_VALIDATION}"
+credhub set -n /pipeline/google/om-username -t value -v "${OM_USERNAME}"
+credhub set -n /pipeline/google/om-password -t value -v "${OM_PASSWORD}"
+credhub set -n /pipeline/google/om-decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
+
+credhub set -n /pipeline/google/domain-crt -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt)"
+credhub set -n /pipeline/google/domain-key -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key)"
 ```
 
 ## Set The `build-pcf-instance` pipeline
@@ -394,8 +401,11 @@ Run this job manually once the `install-opsman` job has run successfully.
 
 ## Add a dummy state file
 
-In the current version of the Platform Automation tasks, `create-vm` requires a state file to trigger the `install-opsman` job.
-We anticipate this limitation will be resolved in due course, but for now:
+The `state,.yml` file is produced by the `create-vm` task and serves as a flag to indicate that an Ops Manager exists.
+We currently store the `state.yml` file in GCS.
+The `install-opsman` job also consumes this file so it can short-circuit the `create-vm` task if an Ops Manager does exist.
+The mandatory input does not exist by default so we create a dummy `state.yml` file to kick off proceedings.
+Storing the `state.yml` file in git may work around this edge case but, arguably, GCS/S3 is a more appropriate home.
 
 ```bash
 echo "---" > ~/state.yml
