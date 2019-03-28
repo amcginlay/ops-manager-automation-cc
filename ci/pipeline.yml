@@ -334,21 +334,21 @@ jobs:
   serial: true
   serial_groups: [ install ]
   plan:
-    - aggregate:
-      - get: one-time-trigger
-        passed: [ install-opsman ]
-      - get: platform-automation-image
-        params:
-          unpack: true
-        trigger: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: opsman-product
-      - get: installation
-        passed: [ export-installation ]
-      - get: config
-      - get: state
+  - aggregate:
+    - get: one-time-trigger
+      passed: [ install-opsman ]
+    - get: platform-automation-image
+      params:
+        unpack: true
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: opsman-product
+    - get: installation
+      passed: [ export-installation ]
+    - get: config
+    - get: state
   - task: zap-ci-directory
     config:
       inputs:
