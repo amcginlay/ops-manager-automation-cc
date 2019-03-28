@@ -401,10 +401,10 @@ Run this job manually once the `install-opsman` job has run successfully.
 
 ## Add a dummy state file
 
-The `state,.yml` file serves as a flag to indicate that an Ops Manager exists.
+The `state,.yml` file is produced by the `create-vm` task and serves as a flag to indicate that an Ops Manager exists.
 We currently store the `state.yml` file in GCS.
-The `install-opsman` job consumes this file so it can short-circuit the `create-vm` task if an Ops Manager does exist.
-The mandatory input does not exist by default so we create a dummy state.yml file to initiate proceedings.
+The `install-opsman` job also consumes this file so it can short-circuit the `create-vm` task if an Ops Manager does exist.
+The mandatory input does not exist by default so we create a dummy `state.yml` file to kick off proceedings.
 Storing the `state.yml` file in git may work around this edge case but, arguably, GCS/S3 is a more appropriate home.
 
 ```bash
