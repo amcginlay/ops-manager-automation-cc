@@ -199,7 +199,6 @@ jobs:
           unpack: true
       - get: opsman-product
       - get: config
-      - get: config
       - get: state
 
   - task: check-interpolated-config
@@ -391,7 +390,6 @@ jobs:
           params:
             unpack: true
         - get: config
-        - get: config
     - task: configure-pks
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
@@ -420,7 +418,6 @@ jobs:
         - get: pks-stemcell
           trigger: true
         - get: config
-        - get: config
     - task: upload-pks-stemcell
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-stemcell.yml
@@ -443,7 +440,6 @@ jobs:
         - get: platform-automation-tasks
           params:
             unpack: true
-        - get: config
         - get: config
     - task: apply-product-changes
       image: platform-automation-image
