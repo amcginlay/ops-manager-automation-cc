@@ -217,39 +217,11 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: "((foundation))/config"
+      INTERPOLATION_PATH: "((foundation))"
     input_mapping:
       files: config
     output_mapping:
       interpolated-files: config
-  - task: credhub-interpolate2
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: "((foundation))/env"
-    input_mapping:
-      files: env
-    output_mapping:
-      interpolated-files: env
-  - task: credhub-interpolate3
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: "((foundation))/vars"
-    input_mapping:
-      files: variable
-    output_mapping:
-      interpolated-files: variable
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
