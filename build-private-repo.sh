@@ -39,8 +39,6 @@ cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
 target: ((om-target))
 username: ((om-username))
 password: ((om-password))
-# connect-timeout: 30
-# request-timeout: 1800
 skip-ssl-validation: true
 EOF
 
@@ -50,15 +48,6 @@ username: ((om-username))
 password: ((om-password))
 decryption-passphrase: ((om-decryption-passphrase))
 EOF
-
-echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/director-vars.yml
-# cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/director-vars.yml << EOF
-# ---
-# gcp-credentials: |
-# $(cat ~/gcp_credentials.json | sed 's/^/  /')
-# gcp-project-id: $(gcloud config get-value core/project)
-# subdomain-name: ${PKS_SUBDOMAIN_NAME}
-# EOF
 
 echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml
 # cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml << EOF
