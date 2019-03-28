@@ -582,18 +582,17 @@ jobs:
 - name: apply-product-changes
   serial: true
   plan:
-    - aggregate:
-      - get: platform-automation-image
-        params:
-          unpack: true
-        passed:
-          - configure-pks
-        trigger: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: config
-
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+        - configure-pks
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
   - task: zap-ci-directory
     config:
       inputs:
@@ -626,10 +625,10 @@ jobs:
     output_mapping:
       interpolated-files: config
 
-    - task: apply-product-changes
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/apply-changes.yml
-      input_mapping:
-        env: config
-      params:
-        ENV_FILE: ((foundation))/env/env.yml
+  - task: apply-product-changes
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/apply-changes.yml
+    input_mapping:
+      env: config
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
