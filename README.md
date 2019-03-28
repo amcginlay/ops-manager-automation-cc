@@ -374,8 +374,8 @@ credhub set -n /pipeline/google/om-username -t value -v "${OM_USERNAME}"
 credhub set -n /pipeline/google/om-password -t value -v "${OM_PASSWORD}"
 credhub set -n /pipeline/google/om-decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
 
-credhub set -n /pipeline/google/domain-crt -t value -v $(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt)
-credhub set -n /pipeline/google/domain-key -t value -v $(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key)
+credhub set -n /pipeline/google/domain-crt -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt)"
+credhub set -n /pipeline/google/domain-key -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key)"
 ```
 
 ## Set The `build-pcf-instance` pipeline
