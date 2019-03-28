@@ -19,10 +19,6 @@ config:
   private_key: |
 $(cat ~/.ssh/id_rsa | sed 's/^/    /')
   uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
-variable:
-  private_key: |
-$(cat ~/.ssh/id_rsa | sed 's/^/    /')
-  uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
 gcp_credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
 gcs:
