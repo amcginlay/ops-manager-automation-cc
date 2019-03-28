@@ -276,17 +276,17 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: one-time-trigger
-          passed: [ install-opsman ]
-        - get: daily-trigger
-          trigger: true
-        - get: platform-automation-image
-          params:
-            unpack: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: config
+      - get: one-time-trigger
+        passed: [ install-opsman ]
+      - get: daily-trigger
+        trigger: true
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
     - task: export-installation
       image: platform-automation-image
       file: platform-automation-tasks/tasks/export-installation.yml
