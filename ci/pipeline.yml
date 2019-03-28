@@ -329,7 +329,6 @@ jobs:
         env: config
         vars: config
       params:
-        VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
         ENV_FILE: ((foundation))/env/env.yml
         OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
     - put: state
