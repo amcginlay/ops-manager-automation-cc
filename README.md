@@ -368,10 +368,10 @@ credhub set -n /pipeline/google/gcp-project-id -t value -v "$(gcloud config get-
 credhub set -n /pipeline/google/opsman-public-ip -t value -v "$(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})"
 credhub set -n /pipeline/google/gcp-credentials -t value -v "$(cat ~/gcp_credentials.json)" # NOT JSON TYPE!
 
-credhub set -n /pipeline/google/target -t value -v "${OM_TARGET}"
-credhub set -n /pipeline/google/skip-ssl-validation -t value -v "${OM_SKIP_SSL_VALIDATION}"
-credhub set -n /pipeline/google/username -t value -v "${OM_USERNAME}"
-credhub set -n /pipeline/google/decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
+credhub set -n /pipeline/google/om-target -t value -v "${OM_TARGET}"
+credhub set -n /pipeline/google/om-skip-ssl-validation -t value -v "${OM_SKIP_SSL_VALIDATION}"
+credhub set -n /pipeline/google/om-username -t value -v "${OM_USERNAME}"
+credhub set -n /pipeline/google/om-decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
 
 credhub set -n /pipeline/google/domain-crt -t certificate -c ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt
 credhub set -n /pipeline/google/domain-key -t ssh -p ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key
