@@ -6,12 +6,12 @@ source ~/.env
 
 rm -rf ~/${GITHUB_PRIVATE_REPO_NAME}/*
 
-mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars
-mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env
+mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/vars
+mkdir -p ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/env
 
 cp -r ${SCRIPTDIR}/ci/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
-cp -r ${SCRIPTDIR}/download-product-configs/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
-cp -r ${SCRIPTDIR}/config/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/
+cp -r ${SCRIPTDIR}/download-product-configs/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/
+cp -r ${SCRIPTDIR}/config/ ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/
 
 cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml << EOF
 ---
@@ -34,7 +34,7 @@ credhub-server: ${CREDHUB_SERVER}
 foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/env/env.yml << EOF
 ---
 target: ((om-target))
 username: ((om-username))
@@ -42,21 +42,11 @@ password: ((om-password))
 skip-ssl-validation: true
 EOF
 
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/config/auth.yml << EOF
+cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/config/auth.yml << EOF
 ---
 username: ((om-username))
 password: ((om-password))
 decryption-passphrase: ((om-decryption-passphrase))
 EOF
 
-echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml
-# cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/pivotal-container-service-vars.yml << EOF
-# ---
-# gcp-project-id: $(gcloud config get-value core/project)
-# subdomain-name: ${PKS_SUBDOMAIN_NAME}
-# domain-name: ${PKS_DOMAIN_NAME}
-# domain-crt: |
-# $(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt | sed 's/^/  /g')
-# domain-key: |
-# $(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key | sed 's/^/  /g')
-# EOF
+echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/vars/pivotal-container-service-vars.yml
