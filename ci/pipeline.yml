@@ -199,7 +199,24 @@ jobs:
           unpack: true
       - get: opsman-product
       - get: config
-      - get: state          
+      - get: state
+
+  - task: check-config-pre
+    config:
+      inputs:
+      - name: config
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox
+      run:
+        path: ash
+        args:
+        - "-c"
+        - |
+          find .
+
   - task: credhub-interpolate
     image: platform-automation-image
     file: platform-automation-tasks/tasks/credhub-interpolate.yml
@@ -215,7 +232,7 @@ jobs:
     output_mapping:
       interpolated-files: config
 
-  - task: check-interpolated-config
+  - task: check-config-post
     config:
       inputs:
       - name: config
