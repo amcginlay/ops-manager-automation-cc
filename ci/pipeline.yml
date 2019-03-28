@@ -189,17 +189,17 @@ jobs:
   serial_groups: [ install ]
   plan:
   - aggregate:
-      - get: platform-automation-image
-        params:
-          unpack: true
-      - get: one-time-trigger
-        trigger: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: opsman-product
-      - get: config
-      - get: state
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: one-time-trigger
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: opsman-product
+    - get: config
+    - get: state
   - task: zap-ci-directory
     config:
       inputs:
@@ -276,17 +276,17 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: one-time-trigger
-          passed: [ install-opsman ]
-        - get: daily-trigger
-          trigger: true
-        - get: platform-automation-image
-          params:
-            unpack: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: config
+      - get: one-time-trigger
+        passed: [ install-opsman ]
+      - get: daily-trigger
+        trigger: true
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
   - task: zap-ci-directory
     config:
       inputs:
@@ -335,20 +335,20 @@ jobs:
   serial_groups: [ install ]
   plan:
     - aggregate:
-        - get: one-time-trigger
-          passed: [ install-opsman ]
-        - get: platform-automation-image
-          params:
-            unpack: true
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: opsman-product
-        - get: installation
-          passed: [ export-installation ]
-        - get: config
-        - get: state
+      - get: one-time-trigger
+        passed: [ install-opsman ]
+      - get: platform-automation-image
+        params:
+          unpack: true
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: opsman-product
+      - get: installation
+        passed: [ export-installation ]
+      - get: config
+      - get: state
   - task: zap-ci-directory
     config:
       inputs:
@@ -407,17 +407,17 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - upgrade-opsman
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: pks-product
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - upgrade-opsman
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: pks-product
+      - get: config
   - task: zap-ci-directory
     config:
       inputs:
@@ -470,16 +470,16 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - upload-and-stage-pks
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - upload-and-stage-pks
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
   - task: zap-ci-directory
     config:
       inputs:
@@ -527,18 +527,18 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - upgrade-opsman
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: pks-stemcell
-          trigger: true
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - upgrade-opsman
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: pks-stemcell
+        trigger: true
+      - get: config
   - task: zap-ci-directory
     config:
       inputs:
@@ -583,16 +583,16 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - configure-pks
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - configure-pks
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
   - task: zap-ci-directory
     config:
       inputs:
