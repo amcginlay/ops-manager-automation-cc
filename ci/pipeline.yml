@@ -262,7 +262,6 @@ jobs:
       env: config
       vars: config
     params:
-      VARS_FILES: vars/((foundation))/vars/director-vars.yml
       ENV_FILE: ((foundation))/env/env.yml
       DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
   - task: apply-director-changes
