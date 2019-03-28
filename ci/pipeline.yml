@@ -205,6 +205,8 @@ jobs:
     config:
       inputs:
       - name: config
+      outputs:
+      - name: config
       platform: linux
       image_resource:
         type: registry-image
@@ -215,6 +217,7 @@ jobs:
         args:
         - "-c"
         - |
+          rm -rf 
           find .
 
   - task: credhub-interpolate-config
@@ -227,36 +230,6 @@ jobs:
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
       INTERPOLATION_PATH: ((foundation))/config
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
-
-  - task: credhub-interpolate-env
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/env
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
-
-  - task: credhub-interpolate-vars
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/vars
     input_mapping:
       files: config
     output_mapping:
