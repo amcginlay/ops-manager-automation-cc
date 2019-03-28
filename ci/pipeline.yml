@@ -275,18 +275,18 @@ jobs:
 - name: export-installation
   serial: true
   plan:
-    - aggregate:
-      - get: one-time-trigger
-        passed: [ install-opsman ]
-      - get: daily-trigger
-        trigger: true
-      - get: platform-automation-image
-        params:
-          unpack: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: config
+  - aggregate:
+    - get: one-time-trigger
+      passed: [ install-opsman ]
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
   - task: zap-ci-directory
     config:
       inputs:
