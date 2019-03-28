@@ -200,8 +200,7 @@ jobs:
       - get: opsman-product
       - get: config
       - get: state
-
-  - task: check-config-pre
+  - task: zap-ci-directory
     config:
       inputs:
       - name: config
@@ -218,8 +217,6 @@ jobs:
         - "-c"
         - |
           rm -rf ./config/amcginlay/ci/
-          find .
-
   - task: credhub-interpolate-config
     image: platform-automation-image
     file: platform-automation-tasks/tasks/credhub-interpolate.yml
@@ -229,28 +226,11 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: '/pipeline/google'
-      INTERPOLATION_PATH: ((foundation))/config
+      INTERPOLATION_PATH: ((foundation))
     input_mapping:
       files: config
     output_mapping:
       interpolated-files: config
-
-  - task: check-config-post
-    config:
-      inputs:
-      - name: config
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: busybox
-      run:
-        path: ash
-        args:
-        - "-c"
-        - |
-          find .
-
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
