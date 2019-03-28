@@ -48,5 +48,3 @@ username: ((om-username))
 password: ((om-password))
 decryption-passphrase: ((om-decryption-passphrase))
 EOF
-
-echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/vars/pivotal-container-service-vars.yml
