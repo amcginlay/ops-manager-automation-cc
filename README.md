@@ -366,11 +366,15 @@ credhub set -n /pipeline/google/domain-name -t value -v "${PKS_DOMAIN_NAME}"
 credhub set -n /pipeline/google/subdomain-name -t value -v "${PKS_SUBDOMAIN_NAME}"
 credhub set -n /pipeline/google/gcp-project-id -t value -v "$(gcloud config get-value core/project)"
 credhub set -n /pipeline/google/opsman-public-ip -t value -v "$(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})"
+credhub set -n /pipeline/google/gcp-credentials -t value -v "$(cat ~/gcp_credentials.json)" # NOT JSON TYPE!
+
+credhub set -n /pipeline/google/target -t value -v "${OM_TARGET}"
+credhub set -n /pipeline/google/skip-ssl-validation -t value -v "${OM_SKIP_SSL_VALIDATION}"
+credhub set -n /pipeline/google/username -t value -v "${OM_USERNAME}"
+credhub set -n /pipeline/google/decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
 
 credhub set -n /pipeline/google/domain-crt -t certificate -c ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt
 credhub set -n /pipeline/google/domain-key -t ssh -p ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key
-
-credhub set -n /pipeline/google/gcp-credentials -t value -v "$(cat ~/gcp_credentials.json)" # NOT JSON TYPE!
 ```
 
 ## Set The `build-pcf-instance` pipeline
