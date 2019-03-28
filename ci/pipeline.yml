@@ -223,7 +223,7 @@ jobs:
       config: config
       vars: config
     params:
-      OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      OPSMAN_CONFIG_FILE: ((foundation))/settings/config/opsman.yml
   - put: state
     params:
       file: generated-state/state.yml
@@ -235,8 +235,8 @@ jobs:
       env: config
       config: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
-      AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
+      AUTH_CONFIG_FILE: ((foundation))/settings/config/auth.yml
   - task: configure-director
     image: platform-automation-image
     file: platform-automation-tasks/tasks/configure-director.yml
@@ -245,15 +245,15 @@ jobs:
       env: config
       vars: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
-      DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
+      DIRECTOR_CONFIG_FILE: ((foundation))/settings/config/director.yml
   - task: apply-director-changes
     image: platform-automation-image
     file: platform-automation-tasks/tasks/apply-director-changes.yml
     input_mapping:
       env: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
 
 - name: export-installation
   serial: true
@@ -290,7 +290,7 @@ jobs:
     input_mapping:
       env: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
       INSTALLATION_FILE: installation-$timestamp.zip
   - put: installation
     params:
@@ -339,8 +339,8 @@ jobs:
       env: config
       vars: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
-      OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
+      OPSMAN_CONFIG_FILE: ((foundation))/settings/config/opsman.yml
   - put: state
     params:
       file: generated-state/state.yml
@@ -350,7 +350,7 @@ jobs:
     input_mapping:
       env: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
 
 - name: upload-and-stage-pks
   serial: true
@@ -388,7 +388,7 @@ jobs:
       product: pks-product
       env: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
   - task: stage-product
     image: platform-automation-image
     file: platform-automation-tasks/tasks/stage-product.yml
@@ -396,7 +396,7 @@ jobs:
       product: pks-product
       env: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
 
 - name: configure-pks
   serial: true
@@ -434,9 +434,8 @@ jobs:
       env: config
       vars: config
     params:
-      CONFIG_FILE: ((foundation))/config/pivotal-container-service.yml
-      VARS_FILES: vars/((foundation))/vars/pivotal-container-service-vars.yml
-      ENV_FILE: ((foundation))/env/env.yml
+      CONFIG_FILE: ((foundation))/settings/config/pivotal-container-service.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
       
 - name: upload-stemcells
   serial: true
@@ -475,7 +474,7 @@ jobs:
       env: config
       stemcell: pks-stemcell
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
 
 - name: apply-product-changes
   serial: true
@@ -511,4 +510,4 @@ jobs:
     input_mapping:
       env: config
     params:
-      ENV_FILE: ((foundation))/env/env.yml
+      ENV_FILE: ((foundation))/settings/env/env.yml
