@@ -34,16 +34,6 @@ credhub-server: ${CREDHUB_SERVER}
 foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
 
-echo "---" > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/opsman-vars.yml
-# cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/vars/opsman-vars.yml << EOF
-# ---
-# gcp-credentials: |
-# $(cat ~/gcp_credentials.json | sed 's/^/  /')
-# opsman-public-ip: $(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})
-# gcp-project-id: $(gcloud config get-value core/project)
-# subdomain-name: ${PKS_SUBDOMAIN_NAME}
-# EOF
-
 cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/env/env.yml << EOF
 ---
 target: ((om-target))
