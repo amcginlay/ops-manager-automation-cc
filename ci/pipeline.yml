@@ -304,20 +304,20 @@ jobs:
   serial_groups: [ install ]
   plan:
     - aggregate:
-        - get: one-time-trigger
-          passed: [ install-opsman ]
-        - get: platform-automation-image
-          params:
-            unpack: true
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: opsman-product
-        - get: installation
-          passed: [ export-installation ]
-        - get: config
-#         - get: state
+      - get: one-time-trigger
+        passed: [ install-opsman ]
+      - get: platform-automation-image
+        params:
+          unpack: true
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: opsman-product
+      - get: installation
+        passed: [ export-installation ]
+      - get: config
+      - get: state
     - task: upgrade-opsman
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upgrade-opsman.yml
@@ -345,17 +345,17 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - upgrade-opsman
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: pks-product
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - upgrade-opsman
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: pks-product
+      - get: config
     - task: upload-product
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-product.yml
@@ -377,16 +377,16 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - upload-and-stage-pks
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - upload-and-stage-pks
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
     - task: configure-pks
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
@@ -403,18 +403,18 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - upgrade-opsman
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: pks-stemcell
-          trigger: true
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - upgrade-opsman
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: pks-stemcell
+        trigger: true
+      - get: config
     - task: upload-pks-stemcell
       image: platform-automation-image
       file: platform-automation-tasks/tasks/upload-stemcell.yml
@@ -428,16 +428,16 @@ jobs:
   serial: true
   plan:
     - aggregate:
-        - get: platform-automation-image
-          params:
-            unpack: true
-          passed:
-            - configure-pks
-          trigger: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: config
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - configure-pks
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: config
     - task: apply-product-changes
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-changes.yml
