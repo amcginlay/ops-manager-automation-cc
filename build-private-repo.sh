@@ -33,18 +33,3 @@ credhub-secret: ${CREDHUB_SECRET}
 credhub-server: ${CREDHUB_SERVER}
 foundation: ${PKS_SUBDOMAIN_NAME}
 EOF
-
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/env/env.yml << EOF
----
-target: ((om-target))
-username: ((om-username))
-password: ((om-password))
-skip-ssl-validation: true
-EOF
-
-cat > ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/settings/config/auth.yml << EOF
----
-username: ((om-username))
-password: ((om-password))
-decryption-passphrase: ((om-decryption-passphrase))
-EOF
