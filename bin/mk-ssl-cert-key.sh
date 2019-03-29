@@ -5,7 +5,9 @@ SCRIPTDIR=$(cd $(dirname "$0") && pwd -P)
 
 mkdir -p ~/certs
 
-DOMAIN=${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}
+set -u # explode if any env vars are not set
+#DOMAIN=${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}
+
 KEY_BITS=2048
 DAYS=365
 
