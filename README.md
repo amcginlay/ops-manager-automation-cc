@@ -251,69 +251,6 @@ gsutil mb -c regional -l us-central1 gs://${PKS_SUBDOMAIN_NAME}-concourse-resour
 gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
 ```
 
-## Create and register a GitHub SSH key for the jumpbox
-
-Follow [these instructions](https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for addding an SSH key to the jumpbox. Be sure to follow the __Linux__ instructions and select the defaults when prompted.
-
-## Create a PRIVATE GitHub repo
-
-Extend your environment file to identify the intended location of your __PRIVATE__ repo:
-
-```bash
-echo "GITHUB_ORG=CHANGE_ME_GITHUB_ORG" >> ~/.env                           # e.g. platform-acceleration-lab
-echo "GITHUB_PRIVATE_REPO_NAME=cc-pks-\${PKS_SUBDOMAIN_NAME}-private" >> ~/.env # (created below)
-```
-
-__Before__ continuing, open the `.env` file and update the values accordingly.
-
-Load the variables into your shell with the source command so we can use them immediately:
-
-```bash
-source ~/.env
-```
-
-Create a __PRIVATE__ repo in GitHub to match GITHUB_PRIVATE_REPO_NAME.
-This will be used to store your pipelines, product configs and secrets files.
-It is of utmost importance that this repo is __PRIVATE__.
-Do not continue until you are sure.
-
-![Github Public Private](github-public-private.png "Github Public Private")
-
-Leave the new __PRIVATE__ repo empty and clone it to the jumpbox:
-
-```bash
-git clone git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git ~/${GITHUB_PRIVATE_REPO_NAME}
-# or 
-git clone https://github.com/${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git ~/${GITHUB_PRIVATE_REPO_NAME}
-```
-
-## Clone _this_ repo
-
-_This_ repo contains file and scripts required to build your private repo.
-
-Clone it now:
-
-```bash
-git clone git@github.com:amcginlay/cc-pks-builder.git ~/cc-pks-builder
-# or 
-git clone https://github.com/amcginlay/cc-pks-builder.git ~/cc-pks-builder
-```
-
-## Build the context-sensitive PRIVATE repo contents
-
-Run the following script and inspect the output:
-
-```bash
-~/cc-pks-builder/build-private-repo.sh
-tree ~/${GITHUB_PRIVATE_REPO_NAME}
-```
-
-Push these changes up into the private repo:
-
-```bash
-(cd ${GITHUB_PRIVATE_REPO_NAME} && git add . && git commit -m "initial" && git push)
-```
-
 ## Store secrets in Credhub
 
 ```bash
@@ -385,4 +322,25 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
     --region us-central1 \
     --iaas gcp \
     ${PKS_SUBDOMAIN_NAME}
+```
+
+
+
+
+
+
+
+## Build the context-sensitive PRIVATE repo contents
+
+Run the following script and inspect the output:
+
+```bash
+~/cc-pks-builder/build-private-repo.sh
+tree ~/${GITHUB_PRIVATE_REPO_NAME}
+```
+
+Push these changes up into the private repo:
+
+```bash
+(cd ${GITHUB_PRIVATE_REPO_NAME} && git add . && git commit -m "initial" && git push)
 ```
