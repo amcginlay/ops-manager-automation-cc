@@ -25,21 +25,21 @@ resources:
 - name: config
   type: git
   source:
-    uri: ((config.uri))
+    uri: ((config-uri))
     branch: master
 
 - name: state
   type: gcs
   source:
     versioned_file: state.yml
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
 - name: platform-automation-pivnet
   type: pivnet
   source:
-    api_token: ((pivnet_token))
+    api_token: ((pivnet-token))
     product_slug: platform-automation
     product_version: 2\.(.*)
     sort_by: semver
@@ -48,7 +48,7 @@ resources:
   type: gcs
   source:
     regexp: OpsManager(.*)onGCP.yml
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
@@ -56,7 +56,7 @@ resources:
   type: gcs
   source:
     regexp: pivotal-container-service-(.*).pivotal
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
@@ -64,7 +64,7 @@ resources:
   type: gcs
   source:
     regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
@@ -72,7 +72,7 @@ resources:
   type: gcs
   source:
     regexp: platform-automation-tasks-(.*).zip
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
@@ -80,7 +80,7 @@ resources:
   type: gcs
   source:
     regexp: platform-automation-image-(.*).tgz
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
@@ -88,7 +88,7 @@ resources:
   type: gcs
   source:
     regexp: installations/installation-(.*).zip
-    bucket: ((gcs.buckets.pivnet_products))
+    bucket: ((gcs-bucket))
     json_key: |
       ((gcp_credentials))
 
