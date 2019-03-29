@@ -329,7 +329,7 @@ If required, be aware that versioned buckets require you to use `gsutil rm -a` t
 
 ## Teardown
 
-Use the installation dashboard to delete the installation, manually delete the Ops Manager VM then execute the following:
+When you're done with your platform, use the installation dashboard to delete the installation and manually delete the Ops Manager VM, then execute the following:
 
 ```bash
 cd ~/terraforming/terraforming-pks
