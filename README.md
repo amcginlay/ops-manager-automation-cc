@@ -138,6 +138,12 @@ gcloud iam service-accounts keys create 'gcp_credentials.json' \
   --iam-account "p-service@$(gcloud config get-value core/project).iam.gserviceaccount.com"
 ```
 
+## Clone this repo
+
+```bash
+git clone https://github.com/amcginlay/cc-pks-builder.git
+```
+
 ## Create a self-signed certificate for PKS
 
 ```bash
