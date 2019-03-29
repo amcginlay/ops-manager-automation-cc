@@ -425,6 +425,11 @@ If required, be aware that versioned buckets require you to use `gsutil rm -a` t
 Use the installation dashboard to delete the installation, manually delete the Ops Manager VM then execute the following:
 
 ```bash
+cd ~/terraforming/terraforming-pks
+terraform destroy --auto-approve
+```
+
+```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
   control-tower destroy \
     --region us-central1 \
