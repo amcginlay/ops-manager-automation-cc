@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
+set -u # explode if any env vars are not set
 
 SCRIPTDIR=$(cd $(dirname "$0") && pwd -P)
 
-mkdir -p ~/certs
-
-set -u # explode if any env vars are not set
 #DOMAIN=${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}
+
+mkdir -p ~/certs
 
 KEY_BITS=2048
 DAYS=365
