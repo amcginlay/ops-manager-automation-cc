@@ -275,7 +275,7 @@ credhub set -n domain-key -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS
 
 ## Build the pipeline
 
-Create a `private.yml` to contain your secrets:
+Create a `private.yml` to contain the secrets required by `pipeline.yml`:
 
 ```bash
 cat > ~/private.yml << EOF
