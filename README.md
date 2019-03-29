@@ -269,16 +269,41 @@ credhub set -n domain-crt -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS
 credhub set -n domain-key -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key)"
 ```
 
-## Set The `build-pcf-instance` pipeline
+## Build the pipeline
+
+Create a `private.yml` to contain your secrets:
+
+```bash
+cat > ~/private.yml << EOF
+---
+config:
+  private_key: |
+$(cat ~/.ssh/id_rsa | sed 's/^/    /')
+  uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
+gcp_credentials: |
+$(cat ~/gcp_credentials.json | sed 's/^/  /')
+gcs:
+  buckets:
+    pivnet_products: ${PKS_SUBDOMAIN_NAME}-concourse-resources
+    installation: ${PKS_SUBDOMAIN_NAME}-concourse-resources
+pivnet_token: ${PIVNET_UAA_REFRESH_TOKEN}
+credhub-ca-cert: |
+$(echo $CREDHUB_CA_CERT | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' | sed 's/^/  /')
+credhub-client: ${CREDHUB_CLIENT}
+credhub-secret: ${CREDHUB_SECRET}
+credhub-server: ${CREDHUB_SERVER}
+foundation: ${PKS_SUBDOMAIN_NAME}
+EOF
+```
 
 Set and unpause the pipeline:
 
 ```bash
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p build-pcf-instance -n \
-  -c ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline.yml \
-  -l ~/${GITHUB_PRIVATE_REPO_NAME}/${PKS_SUBDOMAIN_NAME}/ci/pipeline-vars.yml
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p pivotal-container-service -n \
+  -c ~/cc-pks-builder/ci/pivotal-container-service/pipeline.yml \
+  -l ~/private.yml
 
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p build-pcf-instance
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p pivotal-container-service
 ```
 
 This should begin to execute in ~60 seconds.
