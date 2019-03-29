@@ -195,19 +195,6 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
 
 This will take about 20 mins to complete.
 
-## Verify BOSH and Credhub connectivity
-
-```bash
-eval "$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
-  control-tower info \
-    --region us-central1 \
-    --iaas gcp \
-    --env ${PKS_SUBDOMAIN_NAME})"
-
-bosh env
-credhub --version
-```
-
 ## Persist a few credentials
 
 ```bash
@@ -218,12 +205,26 @@ INFO=$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
     --json \
     ${PKS_SUBDOMAIN_NAME}
 )
+
 echo "CC_ADMIN_PASSWD=$(echo ${INFO} | jq --raw-output .config.concourse_password)" >> ~/.env
 echo "CREDHUB_CA_CERT='$(echo ${INFO} | jq --raw-output .config.credhub_ca_cert)'" >> ~/.env
 echo "CREDHUB_CLIENT=credhub_admin" >> ~/.env
 echo "CREDHUB_SECRET=$(echo ${INFO} | jq --raw-output .config.credhub_admin_client_secret)" >> ~/.env
 echo "CREDHUB_SERVER=$(echo ${INFO} | jq --raw-output .config.credhub_url)" >> ~/.env
+echo 'eval "$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
+  control-tower info \
+    --region us-central1 \
+    --iaas gcp \
+    --env ${PKS_SUBDOMAIN_NAME})"' >> ~/.env
+
 source ~/.env
+```
+
+## Verify BOSH and Credhub connectivity
+
+```bash
+bosh env
+credhub --version
 ```
 
 ## Check Concourse targets and check the pre-configured pipeline:
