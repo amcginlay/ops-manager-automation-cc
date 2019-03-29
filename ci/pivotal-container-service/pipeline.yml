@@ -25,7 +25,6 @@ resources:
 - name: config
   type: git
   source:
-    private_key: ((config.private_key))
     uri: ((config.uri))
     branch: master
 
