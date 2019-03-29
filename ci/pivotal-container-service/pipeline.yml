@@ -223,7 +223,7 @@ jobs:
       config: config
       vars: config
     params:
-      OPSMAN_CONFIG_FILE: ((foundation))/config/ops-manager/2.4/gcp/pivotal-container-service/config.yml
+      OPSMAN_CONFIG_FILE: ((foundation))/config/ops-manager/2.4/gcp/pivotal-container-service/config-vm.yml
   - put: state
     params:
       file: generated-state/state.yml
