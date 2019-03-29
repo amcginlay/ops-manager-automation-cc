@@ -188,6 +188,8 @@ This will take about 5-10 mins to complete.
 
 ## Install Concourse
 
+We use Control Tower to install Concourse, as follows:
+
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
   control-tower deploy \
