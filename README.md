@@ -1,4 +1,4 @@
-# cc-pks-builder
+# ops-manager-automation-cc
 
 ## Create your jumpbox from your local machine or Google Cloud Shell
 
@@ -35,10 +35,13 @@ All following commands should be executed from the jumpbox unless otherwsie inst
 ## Prepare your environment file
 
 ```bash
+echo "PRODUCT_SLUG=pivotal-container-service" > ~/.env
+
 echo "# *** your environment-specific variables will go here ***" > ~/.env
 echo "PIVNET_UAA_REFRESH_TOKEN=CHANGE_ME_PIVNET_UAA_REFRESH_TOKEN" >> ~/.env # e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-r
 echo "PKS_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME" >> ~/.env                       # e.g. pal.pivotal.io
 echo "PKS_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME" >> ~/.env                 # e.g. maroon
+echo "GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO" >> ~/.env             # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
 
 echo "export OM_TARGET=https://pcf.\${PKS_SUBDOMAIN_NAME}.\${PKS_DOMAIN_NAME}" >> ~/.env
 echo "export OM_USERNAME=admin" >> ~/.env
@@ -141,7 +144,7 @@ gcloud iam service-accounts keys create 'gcp_credentials.json' \
 The scripts, pipelines and config you need to complete the following steps are inside this repo, so clone it to your jumpbox:
 
 ```bash
-git clone https://github.com/amcginlay/cc-pks-builder.git ~/cc-pks-builder
+git clone ${GITHUB_PUBLIC_REPO} ~/ops-manager-automation-cc
 ```
 
 ## Create a self-signed certificate
@@ -149,7 +152,7 @@ git clone https://github.com/amcginlay/cc-pks-builder.git ~/cc-pks-builder
 Run the following script to create a certificate and key for the installation:
 
 ```bash
-DOMAIN=${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME} cc-pks-builder/bin/mk-ssl-cert-key.sh
+DOMAIN=${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME} ~/ops-manager-automation-cc/bin/mk-ssl-cert-key.sh
 ```
 
 ## Terraform the infrastructure
@@ -277,7 +280,7 @@ Create a `private.yml` to contain your secrets:
 cat > ~/private.yml << EOF
 ---
 config:
-  uri: https://github.com/amcginlay/cc-pks-builder.git
+  uri: ${GITHUB_PUBLIC_REPO}
 gcp_credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
 gcs:
@@ -297,11 +300,11 @@ EOF
 Set and unpause the pipeline:
 
 ```bash
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p pivotal-container-service -n \
-  -c ~/cc-pks-builder/ci/pivotal-container-service/pipeline.yml \
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p ${PRODUCT_SLUG} -n \
+  -c ~/${GITHUB_PUBLIC_REPO}/ci/${PRODUCT_SLUG}/pipeline.yml \
   -l ~/private.yml
 
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p pivotal-container-service
+fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p ${PRODUCT_SLUG}
 ```
 
 This should begin to execute in ~60 seconds.
