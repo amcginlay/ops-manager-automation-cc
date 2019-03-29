@@ -340,7 +340,7 @@ jobs:
       vars: config
     params:
       ENV_FILE: ((foundation))/config/ops-manager/env.yml
-      OPSMAN_CONFIG_FILE: ((foundation))/settings/config/opsman.yml
+      OPSMAN_CONFIG_FILE: ((foundation))/config/ops-manager/2.4/gcp/pivotal-container-service/config-vm.yml
   - put: state
     params:
       file: generated-state/state.yml
