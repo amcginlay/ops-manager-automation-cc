@@ -297,7 +297,7 @@ Set and unpause the pipeline:
 
 ```bash
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p ${PRODUCT_SLUG} -n \
-  -c ~/${GITHUB_PUBLIC_REPO}/ci/${PRODUCT_SLUG}/pipeline.yml \
+  -c ~/ops-manager-automation-cc/ci/${PRODUCT_SLUG}/pipeline.yml \
   -l ~/private.yml
 
 fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p ${PRODUCT_SLUG}
