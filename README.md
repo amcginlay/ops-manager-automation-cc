@@ -365,7 +365,7 @@ Storing the `state.yml` file in git may work around this edge case but, arguably
 
 ```bash
 echo "---" > ~/state.yml
-gsutil cp ~/state.yml gs://amcginlay-concourse-resources/${PKS_SUBDOMAIN_NAME}/
+gsutil cp ~/state.yml gs://${PKS_SUBDOMAIN_NAME}-concourse-resources/${PKS_SUBDOMAIN_NAME}/
 ```
 
 If required, be aware that versioned buckets require you to use `gsutil rm -a` to take files fully out of view.
