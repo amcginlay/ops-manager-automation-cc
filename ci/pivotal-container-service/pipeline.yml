@@ -434,7 +434,7 @@ jobs:
       env: config
       vars: config
     params:
-      CONFIG_FILE: ((foundation))/settings/config/pivotal-container-service.yml
+      CONFIG_FILE: ((foundation))/config/pivotal-container-service/1.3/config-pivnet.yml
       ENV_FILE: ((foundation))/config/ops-manager/env.yml
       
 - name: upload-stemcells
