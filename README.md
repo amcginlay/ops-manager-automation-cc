@@ -9,7 +9,7 @@ gcloud auth login --project ${GCP_PROJECT_ID} --quiet
 gcloud services enable compute.googleapis.com \
   --project "${GCP_PROJECT_ID}"
 
-gcloud compute instances create "jbox-pal" \
+gcloud compute instances create "jbox-cc" \
   --image-project "ubuntu-os-cloud" \
   --image-family "ubuntu-1804-lts" \
   --boot-disk-size "200" \
@@ -21,7 +21,7 @@ gcloud compute instances create "jbox-pal" \
 ## Move to the jumpbox and log in to GCP
 
 ```bash
-gcloud compute ssh ubuntu@jbox-pal \
+gcloud compute ssh ubuntu@jbox-cc \
   --project "${GCP_PROJECT_ID}" \
   --zone "us-central1-a"
 ```
