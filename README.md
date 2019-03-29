@@ -140,8 +140,10 @@ gcloud iam service-accounts keys create 'gcp_credentials.json' \
 
 ## Clone this repo
 
+The scripts, pipelines and config you need to complete the following steps are inside this repo, so clone it to your jumpbox:
+
 ```bash
-git clone https://github.com/amcginlay/cc-pks-builder.git
+git clone https://github.com/amcginlay/cc-pks-builder.git ~/cc-pks-builder
 ```
 
 ## Create a self-signed certificate for PKS
