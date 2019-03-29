@@ -34,7 +34,7 @@ resources:
     versioned_file: state.yml
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: platform-automation-pivnet
   type: pivnet
@@ -50,7 +50,7 @@ resources:
     regexp: OpsManager(.*)onGCP.yml
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: pks-product
   type: gcs
@@ -58,7 +58,7 @@ resources:
     regexp: pivotal-container-service-(.*).pivotal
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: pks-stemcell
   type: gcs
@@ -66,7 +66,7 @@ resources:
     regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: platform-automation-tasks
   type: gcs
@@ -74,7 +74,7 @@ resources:
     regexp: platform-automation-tasks-(.*).zip
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: platform-automation-image
   type: gcs
@@ -82,7 +82,7 @@ resources:
     regexp: platform-automation-image-(.*).tgz
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: installation
   type: gcs
@@ -90,7 +90,7 @@ resources:
     regexp: installations/installation-(.*).zip
     bucket: ((gcs-bucket))
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 jobs:
 - name: fetch-opsman
