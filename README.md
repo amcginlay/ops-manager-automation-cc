@@ -284,7 +284,7 @@ config-uri: ${GITHUB_PUBLIC_REPO}
 gcp-credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
 gcs-bucket: ${PKS_SUBDOMAIN_NAME}-concourse-resources
-pivnet_token: ${PIVNET_UAA_REFRESH_TOKEN}
+pivnet-token: ${PIVNET_UAA_REFRESH_TOKEN}
 credhub-ca-cert: |
 $(echo $CREDHUB_CA_CERT | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' | sed 's/^/  /')
 credhub-client: ${CREDHUB_CLIENT}
