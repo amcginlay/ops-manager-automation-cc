@@ -277,9 +277,7 @@ Create a `private.yml` to contain your secrets:
 cat > ~/private.yml << EOF
 ---
 config:
-  private_key: |
-$(cat ~/.ssh/id_rsa | sed 's/^/    /')
-  uri: git@github.com:${GITHUB_ORG}/${GITHUB_PRIVATE_REPO_NAME}.git
+  uri: https://github.com/amcginlay/cc-pks-builder.git
 gcp_credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
 gcs:
@@ -345,25 +343,4 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
     --region us-central1 \
     --iaas gcp \
     ${PKS_SUBDOMAIN_NAME}
-```
-
-
-
-
-
-
-
-## Build the context-sensitive PRIVATE repo contents
-
-Run the following script and inspect the output:
-
-```bash
-~/cc-pks-builder/build-private-repo.sh
-tree ~/${GITHUB_PRIVATE_REPO_NAME}
-```
-
-Push these changes up into the private repo:
-
-```bash
-(cd ${GITHUB_PRIVATE_REPO_NAME} && git add . && git commit -m "initial" && git push)
 ```
