@@ -255,6 +255,21 @@ gsutil mb -c regional -l us-central1 gs://${PKS_SUBDOMAIN_NAME}-concourse-resour
 gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
 ```
 
+## Add a dummy state file
+
+The `state,.yml` file is produced by the `create-vm` platform automation task and serves as a flag to indicate that an Ops Manager exists.
+We currently store the `state.yml` file in GCS.
+The `install-opsman` job also consumes this file so it can short-circuit the `create-vm` task if an Ops Manager does exist.
+This is a mandatory input and does not exist by default so we create a dummy `state.yml` file to kick off proceedings.
+Storing the `state.yml` file in git may work around this edge case but, arguably, GCS/S3 is a more appropriate home.
+
+```bash
+echo "---" > ~/state.yml
+gsutil cp ~/state.yml gs://${PKS_SUBDOMAIN_NAME}-concourse-resources/
+```
+
+If required, be aware that versioned buckets require you to use `gsutil rm -a` to take files fully out of view.
+
 ## Store secrets in Credhub
 
 ```bash
@@ -311,21 +326,6 @@ so watch for pipeline failures which contain the necessary URLs to follow.
 You may also observe that on the first run, the `export-installation` job will fail because the Ops Manager
 is missing.
 Run this job manually once the `install-opsman` job has run successfully.
-
-## Add a dummy state file
-
-The `state,.yml` file is produced by the `create-vm` task and serves as a flag to indicate that an Ops Manager exists.
-We currently store the `state.yml` file in GCS.
-The `install-opsman` job also consumes this file so it can short-circuit the `create-vm` task if an Ops Manager does exist.
-This is a mandatory input and does not exist by default so we create a dummy `state.yml` file to kick off proceedings.
-Storing the `state.yml` file in git may work around this edge case but, arguably, GCS/S3 is a more appropriate home.
-
-```bash
-echo "---" > ~/state.yml
-gsutil cp ~/state.yml gs://${PKS_SUBDOMAIN_NAME}-concourse-resources/
-```
-
-If required, be aware that versioned buckets require you to use `gsutil rm -a` to take files fully out of view.
 
 ## Teardown
 
