@@ -331,12 +331,28 @@ If required, be aware that versioned buckets require you to use `gsutil rm -a` t
 
 ## Teardown
 
-When you're done with your platform, use the installation dashboard to delete the installation and manually delete the Ops Manager VM, then execute the following:
+The following steps will help you when you'ready to dispose of everything.
+
+Use the `om` tool to delete the installation (be careful, you will __not__ be asked to confirm this operation):
+
+```bash
+om delete-installation
+```
+
+Delete the Ops Manager VM:
+
+```bash
+gcloud compute instances delete "ops-manager-vm" --zone "us-central1-a" --quiet
+```
+
+Unwind the remaining PCF infrastructure:
 
 ```bash
 cd ~/terraforming/terraforming-pks
 terraform destroy --auto-approve
 ```
+
+Unintstall Concourse with `control-tower`:
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
