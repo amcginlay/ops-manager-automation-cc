@@ -331,7 +331,7 @@ If required, be aware that versioned buckets require you to use `gsutil rm -a` t
 
 ## Teardown
 
-The following steps will help you when you'ready to dispose of everything.
+The following steps will help you when you're ready to dispose of everything.
 
 Use the `om` tool to delete the installation (be careful, you will __not__ be asked to confirm this operation):
 
