@@ -76,9 +76,7 @@ gcloud services enable sqladmin.googleapis.com --async
 sudo apt update --yes && \
 sudo apt install --yes jq && \
 sudo apt install --yes build-essential && \
-sudo apt install --yes ruby-dev && \
-sudo apt install --yes awscli && \
-sudo apt install --yes tree
+sudo apt install --yes ruby-dev
 ```
 
 ```bash
