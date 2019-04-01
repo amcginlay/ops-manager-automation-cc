@@ -35,14 +35,15 @@ All following commands should be executed from the jumpbox unless otherwsie inst
 ## Prepare your environment file
 
 ```bash
-echo "# *** your environment-specific variables will go here ***" > ~/.env
+> ~/.env                                                                     # (re)create empty file
+echo "# *** your environment-specific variables will go here ***" >> ~/.env
 
 echo "PIVNET_UAA_REFRESH_TOKEN=CHANGE_ME_PIVNET_UAA_REFRESH_TOKEN" >> ~/.env # e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-r
 echo "PKS_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME" >> ~/.env                       # e.g. pal.pivotal.io
 echo "PKS_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME" >> ~/.env                 # e.g. maroon
 echo "GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO" >> ~/.env             # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
 
-echo "PRODUCT_SLUG=pivotal-container-service" > ~/.env                       # indicates the target platform (TODO cf)
+echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env                       # indicates the target platform (TODO cf)
 echo "export OM_TARGET=https://pcf.\${PKS_SUBDOMAIN_NAME}.\${PKS_DOMAIN_NAME}" >> ~/.env
 echo "export OM_USERNAME=admin" >> ~/.env
 echo "export OM_PASSWORD=$(uuidgen)" >> ~/.env
