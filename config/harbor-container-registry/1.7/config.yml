@@ -33,7 +33,7 @@ product-properties:
       cert_pem: ((domain-crt))
       private_key_pem: ((domain-key))
   .properties.server_cert_ca:
-    value: ((domain-ca))
+    value: ((domain-crt-ca))
   .properties.with_clair:
     value: true
   .properties.with_notary:
