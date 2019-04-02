@@ -454,6 +454,52 @@ jobs:
     params:
       ENV_FILE: config/ops-manager/env.yml
 
+- name: upload-and-stage-harbor
+  serial: true
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+        - upgrade-opsman
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: harbor-product
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: upload-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: harbor-product
+      env: config
+    params:
+      ENV_FILE: config/ops-manager/env.yml
+  - task: stage-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: harbor-product
+      env: config
+    params:
+      ENV_FILE: config/ops-manager/env.yml
+
 - name: configure-pks
   serial: true
   plan:
