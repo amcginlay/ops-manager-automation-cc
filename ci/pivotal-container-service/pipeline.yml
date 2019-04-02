@@ -68,6 +68,22 @@ resources:
     json_key: |
       ((gcp-credentials))
 
+- name: harbor-product
+  type: gcs
+  source:
+    regexp: harbor-container-registry-(.*).pivotal
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: harbor-stemcell
+  type: gcs
+  source:
+    regexp: harbor-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
 - name: platform-automation-tasks
   type: gcs
   source:
@@ -168,6 +184,47 @@ jobs:
     - put: pks-stemcell
       params:
         file: pks-stemcell/*.tgz
+
+
+- name: fetch-harbor
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-harbor-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: config/harbor/1.7/config-pivnet.yml
+    output_mapping: {downloaded-stemcell: harbor-stemcell}
+  - aggregate:
+    - put: harbor-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: harbor-stemcell
+      params:
+        file: harbor-stemcell/*.tgz
 
 - name: fetch-platform-automation
   # We use the pivnet resource to bootstrap the pipeline,
