@@ -165,11 +165,25 @@ Run the following script to create a certificate and key for the installation:
 DOMAIN=${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME} ~/ops-manager-automation-cc/bin/mk-ssl-cert-key.sh
 ```
 
-## Terraform the infrastructure
+## PKS or PAS?
+
+PKS and PAS have different baseline infrastructure requirements. 
+
+### If you're targetting PAS ...
 
 ```bash
 cd ~/terraforming/terraforming-pks
+```
 
+### ... or, if you're targetting PKS
+
+```bash
+cd ~/terraforming/terraforming-pks
+```
+
+## Terraform the infrastructure
+
+```bash
 cat > terraform.tfvars <<-EOF
 dns_suffix          = "${PCF_DOMAIN_NAME}"
 env_name            = "${PCF_SUBDOMAIN_NAME}"
@@ -180,7 +194,6 @@ opsman_image_url    = ""
 opsman_vm           = 0
 create_gcs_buckets  = "false"
 external_database   = 0
-isolation_segment   = "false"
 service_account_key = <<SERVICE_ACCOUNT_KEY
 $(cat ~/gcp_credentials.json)
 SERVICE_ACCOUNT_KEY
