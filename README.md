@@ -193,7 +193,7 @@ terraform apply --auto-approve
 Note the `opsman_image_url == ""` and `opsman_vm = 0` settings which prohibit Terraform from downloading and deploying the Ops Manager VM.
 The Concourse pipelines will take responsibility for this.
 
-This will take about 5-10 mins to complete.
+This will take about 2 mins to complete.
 
 ## Install Concourse
 
