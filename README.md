@@ -300,6 +300,8 @@ credhub set -n domain-crt -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS
 credhub set -n domain-key -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key)"
 ```
 
+Take a moment to review these settings with `credhub get -n <NAME>`.
+
 ## Build the pipeline
 
 Create a `private.yml` to contain the secrets required by `pipeline.yml`:
