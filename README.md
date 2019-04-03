@@ -194,6 +194,7 @@ opsman_image_url    = ""
 opsman_vm           = 0
 create_gcs_buckets  = "false"
 external_database   = 0
+isolation_segment   = "false"
 service_account_key = <<SERVICE_ACCOUNT_KEY
 $(cat ~/gcp_credentials.json)
 SERVICE_ACCOUNT_KEY
