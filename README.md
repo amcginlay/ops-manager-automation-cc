@@ -268,7 +268,7 @@ gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
 
 ## Add a dummy state file
 
-The `state,.yml` file is produced by the `create-vm` platform automation task and serves as a flag to indicate that an Ops Manager exists.
+The `state.yml` file is produced by the `create-vm` platform automation task and serves as a flag to indicate that an Ops Manager exists.
 We currently store the `state.yml` file in GCS.
 The `install-opsman` job also consumes this file so it can short-circuit the `create-vm` task if an Ops Manager does exist.
 This is a mandatory input and does not exist by default so we create a dummy `state.yml` file to kick off proceedings.
