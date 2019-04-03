@@ -1,5 +1,16 @@
 # ops-manager-automation-cc
 
+## What is this?
+
+The following steps use [Control Tower](https://github.com/EngineerBetter/control-tower) to build a [Concourse](https://concourse-ci.org/) instance on [Google Cloud Platform](https://cloud.google.com/), then uses a combination of [GCS](https://cloud.google.com/storage/) buckets, [Credhub](https://docs.cloudfoundry.org/credhub/), [Platform Automation](http://docs.pivotal.io/platform-automation) tools and a single Concourse pipeline to deploy (and upgrade) the entire OpsMan, PKS and Harbor product stack directly from the [Pivotal Network](https://network.pivotal.io).
+
+Pivotal Application Service to follow soon ...
+
+## Recycling GCP projects
+
+If you wish to re-use an existing GCP project for this exercise, it is often useful to clean up any existing resources beforehand.
+For guidance, follow [these instructions](https://github.com/amcginlay/gcp-cleanup).
+
 ## Create your jumpbox from your local machine or Google Cloud Shell
 
 ```bash
