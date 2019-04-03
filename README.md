@@ -172,7 +172,7 @@ PKS and PAS have different baseline infrastructure requirements which we configu
 ### If you're targetting PAS ...
 
 ```bash
-cd ~/terraforming/terraforming-pks
+cd ~/terraforming/terraforming-pas
 ```
 
 ### ... or, if you're targetting PKS
