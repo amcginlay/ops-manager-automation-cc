@@ -167,7 +167,7 @@ DOMAIN=${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME} ~/ops-manager-automation-cc/bin/
 
 ## PKS or PAS?
 
-PKS and PAS have different baseline infrastructure requirements which we configure in separate directories.
+PKS and PAS have different baseline infrastructure requirements which we configure from separate dedicated directories.
 
 ### If you're targetting PAS ...
 
