@@ -54,7 +54,6 @@ echo "PCF_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME" >> ~/.env                       # e
 echo "PCF_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME" >> ~/.env                 # e.g. "mypks", "mypas", "cls66env99", "maroon", etc.
 echo "GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO" >> ~/.env             # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
 
-echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env                       # indicates the target platform (TODO cf)
 echo "export OM_TARGET=https://pcf.\${PCF_SUBDOMAIN_NAME}.\${PCF_DOMAIN_NAME}" >> ~/.env
 echo "export OM_USERNAME=admin" >> ~/.env
 echo "export OM_PASSWORD=$(uuidgen)" >> ~/.env
@@ -172,12 +171,14 @@ PKS and PAS have different baseline infrastructure requirements which we configu
 ### If you're targetting PAS ...
 
 ```bash
+echo "PRODUCT_SLUG=cf" >> ~/.env
 cd ~/terraforming/terraforming-pas
 ```
 
 ### ... or, if you're targetting PKS
 
 ```bash
+echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
 cd ~/terraforming/terraforming-pks
 ```
 
