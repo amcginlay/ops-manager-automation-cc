@@ -193,9 +193,10 @@ EOF
 Note the `opsman_image_url == ""` setting which prohibits Terraform from downloading and deploying the Ops Manager VM.
 The Concourse pipelines will take responsibility for this.
 
-## PKS or PAS?
+## Terraform the infrastructure
 
-PKS and PAS have different baseline infrastructure requirements which are configure from separate dedicated directories.
+The PKS and PAS platforms have different baseline infrastructure requirements which are configured from separate dedicated directories.
+Terraform is directory-sensitive and needs local access to your customized `terraform.tfvars` files so symlink it in from the home directory.
 
 ### If you're targetting PAS ...
 
@@ -213,7 +214,9 @@ cd ~/terraforming-gcp*/terraforming-pks
 ln -s ~/terraform.tfvars .
 ```
 
-## Terraform the infrastructure
+### Launch Terraform
+
+Confirm you're in the correct directory and `terraform.tfvars` is visible, then execute the following:
 
 ```bash
 terraform init
