@@ -133,7 +133,7 @@ wget -O terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/ter
 TGCP_VERSION=0.74.0
 wget -O terraforming-gcp.tar.gz https://github.com/pivotal-cf/terraforming-gcp/releases/download/v${TGCP_VERSION}/terraforming-gcp-v${TGCP_VERSION}.tar.gz && \
   tar -zxvf terraforming-gcp.tar.gz && \
-  mv terraforming terraforming-v${TGCP_VERSION} && \
+  mv terraforming terraforming-gcp-v${TGCP_VERSION} && \
   rm terraforming-gcp.tar.gz
 ```
 
@@ -173,14 +173,14 @@ PKS and PAS have different baseline infrastructure requirements which we configu
 
 ```bash
 echo "PRODUCT_SLUG=cf" >> ~/.env
-cd ~/terraforming*/terraforming-pas
+cd ~/terraforming-gcp*/terraforming-pas
 ```
 
 ### ... or, if you're targetting PKS
 
 ```bash
 echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
-cd ~/terraforming*/terraforming-pks
+cd ~/terraforming-gcp*/terraforming-pks
 ```
 
 ## Terraform the infrastructure
@@ -381,7 +381,7 @@ gcloud compute instances delete "ops-manager-vm" --zone "us-central1-a" --quiet
 Unwind the remaining PCF infrastructure:
 
 ```bash
-cd ~/terraforming*/terraforming-pks
+cd ~/terraforming-gcp*/terraforming-pks
 terraform destroy --auto-approve
 ```
 
