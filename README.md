@@ -165,28 +165,10 @@ Run the following script to create a certificate and key for the installation:
 DOMAIN=${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME} ~/ops-manager-automation-cc/bin/mk-ssl-cert-key.sh
 ```
 
-## PKS or PAS?
-
-PKS and PAS have different baseline infrastructure requirements which we configure from separate dedicated directories.
-
-### If you're targetting PAS ...
+## Configure Terraform
 
 ```bash
-echo "PRODUCT_SLUG=cf" >> ~/.env
-cd ~/terraforming-gcp*/terraforming-pas
-```
-
-### ... or, if you're targetting PKS
-
-```bash
-echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
-cd ~/terraforming-gcp*/terraforming-pks
-```
-
-## Terraform the infrastructure
-
-```bash
-cat > terraform.tfvars <<-EOF
+cat > ~/terraform.tfvars <<-EOF
 dns_suffix             = "${PCF_DOMAIN_NAME}"
 env_name               = "${PCF_SUBDOMAIN_NAME}"
 region                 = "us-central1"
@@ -206,13 +188,37 @@ service_account_key = <<SERVICE_ACCOUNT_KEY
 $(cat ~/gcp_credentials.json)
 SERVICE_ACCOUNT_KEY
 EOF
+```
 
+Note the `opsman_image_url == ""` setting which prohibits Terraform from downloading and deploying the Ops Manager VM.
+The Concourse pipelines will take responsibility for this.
+
+## PKS or PAS?
+
+PKS and PAS have different baseline infrastructure requirements which are configure from separate dedicated directories.
+
+### If you're targetting PAS ...
+
+```bash
+echo "PRODUCT_SLUG=cf" >> ~/.env
+cd ~/terraforming-gcp*/terraforming-pas
+ln -s ~/terraform.tfvars .
+```
+
+### ... or, if you're targetting PKS
+
+```bash
+echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
+cd ~/terraforming-gcp*/terraforming-pks
+ln -s ~/terraform.tfvars .
+```
+
+## Terraform the infrastructure
+
+```bash
 terraform init
 terraform apply --auto-approve
 ```
-
-Note the `opsman_image_url == ""` and `opsman_vm = 0` settings which prohibit Terraform from downloading and deploying the Ops Manager VM.
-The Concourse pipelines will take responsibility for this.
 
 This will take about 2 mins to complete.
 
