@@ -133,7 +133,7 @@ wget -O terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/ter
 TGCP_VERSION=0.74.0
 wget -O terraforming-gcp.tar.gz https://github.com/pivotal-cf/terraforming-gcp/releases/download/v${TGCP_VERSION}/terraforming-gcp-v${TGCP_VERSION}.tar.gz && \
   tar -zxvf terraforming-gcp.tar.gz && \
-  mv terraforming terraforming-v${TGCP_VERSION}
+  mv terraforming terraforming-v${TGCP_VERSION} && \
   rm terraforming-gcp.tar.gz
 ```
 
