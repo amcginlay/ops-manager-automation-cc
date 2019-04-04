@@ -1,1 +1,16 @@
 ---
+product-name: cf
+network-properties:
+  singleton_availability_zone:
+    name: us-central1-a
+  other_availability_zones:
+  - name: us-central1-a
+  - name: us-central1-b
+  - name: us-central1-c
+  network:
+    name: pas
+  service_network:
+    name: services
+product-properties:
+errand-config:
+resource-config:
