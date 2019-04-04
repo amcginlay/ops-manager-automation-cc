@@ -174,6 +174,7 @@ region                 = "us-central1"
 zones                  = ["us-central1-b", "us-central1-a", "us-central1-c"]
 project                = "$(gcloud config get-value core/project)"
 opsman_image_url       = ""
+opsman_vm              = 0
 create_gcs_buckets     = "false"
 external_database      = 0
 isolation_segment      = 0
