@@ -339,6 +339,7 @@ Create a `private.yml` to contain the secrets required by `pipeline.yml`:
 ```bash
 cat > ~/private.yml << EOF
 ---
+product-slug: ${PRODUCT_SLUG}
 config-uri: ${GITHUB_PUBLIC_REPO}
 gcp-credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
