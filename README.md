@@ -133,7 +133,6 @@ wget -O terraform.zip https://releases.hashicorp.com/terraform/${TF_VERSION}/ter
 TGCP_VERSION=0.74.0
 wget -O terraforming-gcp.tar.gz https://github.com/pivotal-cf/terraforming-gcp/releases/download/v${TGCP_VERSION}/terraforming-gcp-v${TGCP_VERSION}.tar.gz && \
   tar -zxvf terraforming-gcp.tar.gz && \
-  mv terraforming terraforming-gcp-v${TGCP_VERSION} && \
   rm terraforming-gcp.tar.gz
 ```
 
@@ -202,7 +201,7 @@ Terraform is directory-sensitive and needs local access to your customized `terr
 
 ```bash
 echo "PRODUCT_SLUG=cf" >> ~/.env
-cd ~/terraforming-gcp*/terraforming-pas
+cd ~/terraforming/terraforming-pas
 ln -s ~/terraform.tfvars .
 ```
 
@@ -210,7 +209,7 @@ ln -s ~/terraform.tfvars .
 
 ```bash
 echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
-cd ~/terraforming-gcp*/terraforming-pks
+cd ~/terraforming/terraforming-pks
 ln -s ~/terraform.tfvars .
 ```
 
@@ -390,7 +389,7 @@ gcloud compute instances delete "ops-manager-vm" --zone "us-central1-a" --quiet
 Unwind the remaining PCF infrastructure:
 
 ```bash
-cd ~/terraforming-gcp*/terraforming-pks
+cd ~/terraforming/terraforming-pks
 terraform destroy --auto-approve
 ```
 
