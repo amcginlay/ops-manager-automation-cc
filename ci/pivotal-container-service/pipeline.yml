@@ -26,7 +26,7 @@ resources:
   type: git
   source:
     uri: ((config-uri))
-    branch: master
+    branch: 20190403
 
 - name: state
   type: gcs
