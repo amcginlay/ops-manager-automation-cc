@@ -216,7 +216,7 @@ ln -s ~/terraform.tfvars .
 
 ### Launch Terraform
 
-Confirm you're in the correct directory and `terraform.tfvars` is visible, then execute the following:
+Confirm you're in the correct directory for your chosen platform and `terraform.tfvars` is present, then execute the following:
 
 ```bash
 terraform init
