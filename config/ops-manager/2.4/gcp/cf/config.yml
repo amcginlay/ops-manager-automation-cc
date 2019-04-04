@@ -24,7 +24,7 @@ networks-configuration:
       - us-central1-c
   - name: pks
     subnets:
-    - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-pks-subnet/us-central1
+    - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-pas-subnet/us-central1
       cidr: 10.0.10.0/24
       dns: 169.254.169.254
       gateway: 10.0.10.1
@@ -35,7 +35,7 @@ networks-configuration:
       - us-central1-c
   - name: pks-services
     subnets:
-    - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-pks-services-subnet/us-central1
+    - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-services-subnet/us-central1
       cidr: 10.0.11.0/24
       dns: 169.254.169.254
       gateway: 10.0.11.1
