@@ -173,14 +173,14 @@ PKS and PAS have different baseline infrastructure requirements which we configu
 
 ```bash
 echo "PRODUCT_SLUG=cf" >> ~/.env
-cd ~/terraforming/terraforming-pas
+cd ~/terraforming*/terraforming-pas
 ```
 
 ### ... or, if you're targetting PKS
 
 ```bash
 echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
-cd ~/terraforming/terraforming-pks
+cd ~/terraforming*/terraforming-pks
 ```
 
 ## Terraform the infrastructure
@@ -376,7 +376,7 @@ gcloud compute instances delete "ops-manager-vm" --zone "us-central1-a" --quiet
 Unwind the remaining PCF infrastructure:
 
 ```bash
-cd ~/terraforming/terraforming-pks
+cd ~/terraforming*/terraforming-pks
 terraform destroy --auto-approve
 ```
 
