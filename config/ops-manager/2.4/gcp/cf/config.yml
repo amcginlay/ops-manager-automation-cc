@@ -25,10 +25,10 @@ networks-configuration:
   - name: pas
     subnets:
     - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-pas-subnet/us-central1
-      cidr: 10.0.10.0/24
+      cidr: 10.0.4.0/24
       dns: 169.254.169.254
-      gateway: 10.0.10.1
-      reserved_ip_ranges: 10.0.10.1-10.0.10.9
+      gateway: 10.0.4.1
+      reserved_ip_ranges: 10.0.4.1-10.0.4.9
       availability_zone_names:
       - us-central1-a
       - us-central1-b
@@ -36,10 +36,10 @@ networks-configuration:
   - name: services
     subnets:
     - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-services-subnet/us-central1
-      cidr: 10.0.11.0/24
+      cidr: 10.0.8.0/24
       dns: 169.254.169.254
-      gateway: 10.0.11.1
-      reserved_ip_ranges: 10.0.11.1-10.0.11.9
+      gateway: 10.0.8.1
+      reserved_ip_ranges: 10.0.8.1-10.0.8.9
       availability_zone_names:
       - us-central1-a
       - us-central1-b
