@@ -592,8 +592,8 @@ jobs:
         unpack: true
     - get: pas-stemcell
       trigger: true
-     - get: healthwatch-stemcell
-       trigger: true
+    - get: healthwatch-stemcell
+      trigger: true
     - get: config
   - task: credhub-interpolate-config
     image: platform-automation-image
