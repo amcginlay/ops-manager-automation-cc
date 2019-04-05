@@ -50,12 +50,11 @@ All following commands should be executed from the jumpbox unless otherwsie inst
 echo "# *** your environment-specific variables will go here ***" >> ~/.env
 
 echo "PIVNET_UAA_REFRESH_TOKEN=CHANGE_ME_PIVNET_UAA_REFRESH_TOKEN" >> ~/.env # e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-r
-echo "PKS_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME" >> ~/.env                       # e.g. "mydomain.com", "pal.pivotal.io", "pivotaledu.io", etc.
-echo "PKS_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME" >> ~/.env                 # e.g. "mypks", "cls66env99", "maroon", etc.
+echo "PCF_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME" >> ~/.env                       # e.g. "mydomain.com", "pal.pivotal.io", "pivotaledu.io", etc.
+echo "PCF_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME" >> ~/.env                 # e.g. "mypks", "mypas", "cls66env99", "maroon", etc.
 echo "GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO" >> ~/.env             # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
 
-echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env                       # indicates the target platform (TODO cf)
-echo "export OM_TARGET=https://pcf.\${PKS_SUBDOMAIN_NAME}.\${PKS_DOMAIN_NAME}" >> ~/.env
+echo "export OM_TARGET=https://pcf.\${PCF_SUBDOMAIN_NAME}.\${PCF_DOMAIN_NAME}" >> ~/.env
 echo "export OM_USERNAME=admin" >> ~/.env
 echo "export OM_PASSWORD=$(uuidgen)" >> ~/.env
 echo "export OM_DECRYPTION_PASSPHRASE=\${OM_PASSWORD}" >> ~/.env
@@ -162,36 +161,67 @@ git clone ${GITHUB_PUBLIC_REPO} ~/ops-manager-automation-cc
 Run the following script to create a certificate and key for the installation:
 
 ```bash
-DOMAIN=${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME} ~/ops-manager-automation-cc/bin/mk-ssl-cert-key.sh
+DOMAIN=${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME} ~/ops-manager-automation-cc/bin/mk-ssl-cert-key.sh
 ```
 
-## Terraform the infrastructure
+## Configure Terraform
 
 ```bash
-cd ~/terraforming/terraforming-pks
-
-cat > terraform.tfvars <<-EOF
-dns_suffix          = "${PKS_DOMAIN_NAME}"
-env_name            = "${PKS_SUBDOMAIN_NAME}"
-region              = "us-central1"
-zones               = ["us-central1-b", "us-central1-a", "us-central1-c"]
-project             = "$(gcloud config get-value core/project)"
-opsman_image_url    = ""
-opsman_vm           = 0
-create_gcs_buckets  = "false"
-external_database   = 0
-isolation_segment   = "false"
+cat > ~/terraform.tfvars <<-EOF
+dns_suffix             = "${PCF_DOMAIN_NAME}"
+env_name               = "${PCF_SUBDOMAIN_NAME}"
+region                 = "us-central1"
+zones                  = ["us-central1-b", "us-central1-a", "us-central1-c"]
+project                = "$(gcloud config get-value core/project)"
+opsman_image_url       = ""
+opsman_vm              = 0
+create_gcs_buckets     = "false"
+external_database      = 0
+isolation_segment      = 0
+ssl_cert            = <<SSL_CERT
+$(cat ~/certs/${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME}.crt)
+SSL_CERT
+ssl_private_key     = <<SSL_KEY
+$(cat ~/certs/${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME}.key)
+SSL_KEY
 service_account_key = <<SERVICE_ACCOUNT_KEY
 $(cat ~/gcp_credentials.json)
 SERVICE_ACCOUNT_KEY
 EOF
+```
 
+Note the `opsman_image_url == ""` setting which prohibits Terraform from downloading and deploying the Ops Manager VM.
+The Concourse pipelines will take responsibility for this.
+
+## Terraform the infrastructure
+
+The PKS and PAS platforms have different baseline infrastructure requirements which are configured from separate dedicated directories.
+Terraform is directory-sensitive and needs local access to your customized `terraform.tfvars` files so symlink it in from the home directory.
+
+### If you're targetting PAS ...
+
+```bash
+echo "PRODUCT_SLUG=cf" >> ~/.env
+cd ~/terraforming/terraforming-pas
+ln -s ~/terraform.tfvars .
+```
+
+### ... or, if you're targetting PKS
+
+```bash
+echo "PRODUCT_SLUG=pivotal-container-service" >> ~/.env
+cd ~/terraforming/terraforming-pks
+ln -s ~/terraform.tfvars .
+```
+
+### Launch Terraform
+
+Confirm you're in the correct directory for your chosen platform and `terraform.tfvars` is present, then execute the following:
+
+```bash
 terraform init
 terraform apply --auto-approve
 ```
-
-Note the `opsman_image_url == ""` and `opsman_vm = 0` settings which prohibit Terraform from downloading and deploying the Ops Manager VM.
-The Concourse pipelines will take responsibility for this.
 
 This will take about 2 mins to complete.
 
@@ -205,7 +235,7 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
     --region us-central1 \
     --iaas gcp \
     --workers 3 \
-    ${PKS_SUBDOMAIN_NAME}
+    ${PCF_SUBDOMAIN_NAME}
 ```
 
 This will take about 20 mins to complete.
@@ -218,7 +248,7 @@ INFO=$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
     --region us-central1 \
     --iaas gcp \
     --json \
-    ${PKS_SUBDOMAIN_NAME}
+    ${PCF_SUBDOMAIN_NAME}
 )
 
 echo "CC_ADMIN_PASSWD=$(echo ${INFO} | jq --raw-output .config.concourse_password)" >> ~/.env
@@ -230,7 +260,7 @@ echo 'eval "$(GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
   control-tower info \
     --region us-central1 \
     --iaas gcp \
-    --env ${PKS_SUBDOMAIN_NAME})"' >> ~/.env
+    --env ${PCF_SUBDOMAIN_NAME})"' >> ~/.env
 
 source ~/.env
 ```
@@ -246,7 +276,7 @@ credhub --version
 
 ```bash
 fly targets
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} pipelines
+fly -t control-tower-${PCF_SUBDOMAIN_NAME} pipelines
 ```
 
 Navigate to the `url` shown for `fly targets`.
@@ -256,14 +286,14 @@ Use `admin` user and the value of `CC_ADMIN_PASSWD` to login and see the pre-con
 __Note__ `control-tower` will log you in but valid access tokens will expire every 24 hours. The command to log back in is:
 
 ```bash
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} login --insecure --username admin --password ${CC_ADMIN_PASSWD}
+fly -t control-tower-${PCF_SUBDOMAIN_NAME} login --insecure --username admin --password ${CC_ADMIN_PASSWD}
 ```
 
 ## Set up dedicated GCS bucket for downloads
 
 ```bash
-gsutil mb -c regional -l us-central1 gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
-gsutil versioning set on gs://${PKS_SUBDOMAIN_NAME}-concourse-resources
+gsutil mb -c regional -l us-central1 gs://${PCF_SUBDOMAIN_NAME}-concourse-resources
+gsutil versioning set on gs://${PCF_SUBDOMAIN_NAME}-concourse-resources
 ```
 
 ## Add a dummy state file
@@ -276,7 +306,7 @@ Storing the `state.yml` file in git may work around this edge case but, arguably
 
 ```bash
 echo "---" > ~/state.yml
-gsutil cp ~/state.yml gs://${PKS_SUBDOMAIN_NAME}-concourse-resources/
+gsutil cp ~/state.yml gs://${PCF_SUBDOMAIN_NAME}-concourse-resources/
 ```
 
 If required, be aware that versioned buckets require you to use `gsutil rm -a` to take files fully out of view.
@@ -285,19 +315,19 @@ If required, be aware that versioned buckets require you to use `gsutil rm -a` t
 
 ```bash
 credhub set -n pivnet-api-token -t value -v "${PIVNET_UAA_REFRESH_TOKEN}"
-credhub set -n domain-name -t value -v "${PKS_DOMAIN_NAME}"
-credhub set -n subdomain-name -t value -v "${PKS_SUBDOMAIN_NAME}"
+credhub set -n domain-name -t value -v "${PCF_DOMAIN_NAME}"
+credhub set -n subdomain-name -t value -v "${PCF_SUBDOMAIN_NAME}"
 credhub set -n gcp-project-id -t value -v "$(gcloud config get-value core/project)"
-credhub set -n opsman-public-ip -t value -v "$(dig +short pcf.${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME})"
+credhub set -n opsman-public-ip -t value -v "$(dig +short pcf.${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME})"
 credhub set -n gcp-credentials -t value -v "$(cat ~/gcp_credentials.json)"
 credhub set -n om-target -t value -v "${OM_TARGET}"
 credhub set -n om-skip-ssl-validation -t value -v "${OM_SKIP_SSL_VALIDATION}"
 credhub set -n om-username -t value -v "${OM_USERNAME}"
 credhub set -n om-password -t value -v "${OM_PASSWORD}"
 credhub set -n om-decryption-passphrase -t value -v "${OM_DECRYPTION_PASSPHRASE}"
-credhub set -n domain-crt-ca -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.ca.crt)"
-credhub set -n domain-crt -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.crt)"
-credhub set -n domain-key -t value -v "$(cat ~/certs/${PKS_SUBDOMAIN_NAME}.${PKS_DOMAIN_NAME}.key)"
+credhub set -n domain-crt-ca -t value -v "$(cat ~/certs/${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME}.ca.crt)"
+credhub set -n domain-crt -t value -v "$(cat ~/certs/${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME}.crt)"
+credhub set -n domain-key -t value -v "$(cat ~/certs/${PCF_SUBDOMAIN_NAME}.${PCF_DOMAIN_NAME}.key)"
 ```
 
 Take a moment to review these settings with `credhub get -n <NAME>`.
@@ -309,10 +339,11 @@ Create a `private.yml` to contain the secrets required by `pipeline.yml`:
 ```bash
 cat > ~/private.yml << EOF
 ---
+product-slug: ${PRODUCT_SLUG}
 config-uri: ${GITHUB_PUBLIC_REPO}
 gcp-credentials: |
 $(cat ~/gcp_credentials.json | sed 's/^/  /')
-gcs-bucket: ${PKS_SUBDOMAIN_NAME}-concourse-resources
+gcs-bucket: ${PCF_SUBDOMAIN_NAME}-concourse-resources
 pivnet-token: ${PIVNET_UAA_REFRESH_TOKEN}
 credhub-ca-cert: |
 $(echo $CREDHUB_CA_CERT | sed 's/- /-\n/g; s/ -/\n-/g' | sed '/CERTIFICATE/! s/ /\n/g' | sed 's/^/  /')
@@ -325,11 +356,11 @@ EOF
 Set and unpause the pipeline:
 
 ```bash
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} set-pipeline -p ${PRODUCT_SLUG} -n \
+fly -t control-tower-${PCF_SUBDOMAIN_NAME} set-pipeline -p ${PRODUCT_SLUG} -n \
   -c ~/ops-manager-automation-cc/ci/${PRODUCT_SLUG}/pipeline.yml \
   -l ~/private.yml
 
-fly -t control-tower-${PKS_SUBDOMAIN_NAME} unpause-pipeline -p ${PRODUCT_SLUG}
+fly -t control-tower-${PCF_SUBDOMAIN_NAME} unpause-pipeline -p ${PRODUCT_SLUG}
 ```
 
 This should begin to execute in ~60 seconds.
@@ -371,5 +402,5 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
   control-tower destroy \
     --region us-central1 \
     --iaas gcp \
-    ${PKS_SUBDOMAIN_NAME}
+    ${PCF_SUBDOMAIN_NAME}
 ```

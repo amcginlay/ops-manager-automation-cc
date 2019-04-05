@@ -1,0 +1,25 @@
+product-name: p-healthwatch
+network-properties:
+  singleton_availability_zone:
+    name: us-central1-a
+  other_availability_zones:
+  - name: us-central1-a
+  - name: us-central1-b
+  - name: us-central1-c
+  network:
+    name: pas
+  service_network:
+    name: services
+product-properties:
+  .properties.opsman:
+    value: enable
+  .properties.opsman.enable.url:
+    value: https://pcf.((subdomain-name)).((domain-name))
+  .healthwatch-forwarder.health_check_az:
+    value: us-central1-a
+  .properties.boshtasks:
+    value: disable
+errand-config:
+resource-config:
+  mysql:
+    instances: 1
