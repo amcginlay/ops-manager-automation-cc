@@ -1,4 +1,3 @@
----
 product-name: cf
 network-properties:
   singleton_availability_zone:
@@ -9,8 +8,55 @@ network-properties:
   - name: us-central1-c
   network:
     name: pas
-  service_network:
-    name: services
 product-properties:
+  .cloud_controller.system_domain:
+    value: sys.((subdomain-name)).((domain-name))
+  .cloud_controller.apps_domain:
+    value: apps.((subdomain-name)).((domain-name))
+  .properties.networking_poe_ssl_certs:
+    value:
+    - name: certificate
+      certificate:
+        cert_pem: ((domain-crt))
+        private_key_pem: ((domain-key))
+  .properties.haproxy_forward_tls:
+    value: disable
+  .ha_proxy.skip_cert_verify:
+    value: true
+  .properties.security_acknowledgement:
+    value: X
+  .uaa.service_provider_key_credentials:
+    value:
+      cert_pem: ((domain-crt))
+      private_key_pem: ((domain-key))
+  .properties.credhub_key_encryption_passwords:
+    value:
+    - name: default
+      key:
+        secret: ((credhub-secret))
+      primary: true
+  .mysql_monitor.recipient_email:
+    value: fbloggs@gmail.com
 errand-config:
+  deploy-autoscaler:
+    post-deploy-state: false
+  deploy-notifications:
+    post-deploy-state: false
+  deploy-notifications-ui:
+    post-deploy-state: false
+  nfsbrokerpush:
+    post-deploy-state: false
+  test-autoscaling:
+    post-deploy-state: false
 resource-config:
+  compute:
+    instances: 3
+    instance_type:
+      id: 2xlarge.disk
+  control:
+    elb_names:
+    - tcp:((subdomain-name))-cf-ssh
+  router:
+    elb_names:
+    - tcp:((subdomain-name))-cf-ws
+    - http:((subdomain-name))-httpslb
