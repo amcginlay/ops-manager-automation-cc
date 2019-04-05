@@ -16,7 +16,7 @@ product-properties:
   .properties.opsman.enable.url:
     value: https://pcf.((subdomain-name)).((domain-name))
   .healthwatch-forwarder.health_check_az:
-    value: (us-central1-a
+    value: us-central1-a
   .properties.boshtasks:
     value: disable
 errand-config:
