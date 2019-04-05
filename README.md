@@ -6,9 +6,9 @@ The following steps use [Control Tower](https://github.com/EngineerBetter/contro
 
 The pipelines currently support [Pivotal Container Service](https://pivotal.io/platform/pivotal-container-service) and [Pivotal Application Service](https://pivotal.io/platform/pivotal-application-service) with related products.
 
-## Fork this project
+## Fork this repository
 
-I recommend forking this project so you can:
+I recommend forking this repository so you can:
 
 * Make modifications to suit your own requirements
 * Protect your active pipelines from config changes made here
