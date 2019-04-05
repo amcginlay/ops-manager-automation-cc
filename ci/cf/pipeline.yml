@@ -592,8 +592,8 @@ jobs:
         unpack: true
     - get: pas-stemcell
       trigger: true
-    - get: healthwatch-stemcell
-      trigger: true
+     - get: healthwatch-stemcell
+       trigger: true
     - get: config
   - task: credhub-interpolate-config
     image: platform-automation-image
@@ -626,7 +626,7 @@ jobs:
     params:
       ENV_FILE: config/ops-manager/env.yml
 
- - name: apply-product-changes
+- name: apply-product-changes
   serial: true
   plan:
   - aggregate:
