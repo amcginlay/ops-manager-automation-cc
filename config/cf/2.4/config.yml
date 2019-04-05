@@ -33,7 +33,7 @@ product-properties:
     value:
     - name: default
       key:
-        secret: ((credhub-secret))
+        secret: ((om-password))
       primary: true
   .mysql_monitor.recipient_email:
     value: fbloggs@gmail.com
