@@ -33,7 +33,7 @@ networks-configuration:
       - us-central1-a
       - us-central1-b
       - us-central1-c
-  - name: pas-services
+  - name: services
     subnets:
     - iaas_identifier: ((subdomain-name))-pcf-network/((subdomain-name))-services-subnet/us-central1
       cidr: 10.0.11.0/24
