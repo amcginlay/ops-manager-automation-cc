@@ -271,7 +271,7 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: config/pivotal-mysql/1.5/config-pivnet.yml
+      CONFIG_FILE: config/pivotal-mysql/2.5/config-pivnet.yml
     output_mapping: {downloaded-stemcell: mysql-stemcell}
   - aggregate:
     - put: mysql-product
@@ -715,7 +715,7 @@ jobs:
       env: config
       vars: config
     params:
-      CONFIG_FILE: config/p-mysql/1.4/config.yml
+      CONFIG_FILE: config/p-mysql/2.5/config.yml
       ENV_FILE: config/ops-manager/env.yml
 
 - name: upload-stemcells
