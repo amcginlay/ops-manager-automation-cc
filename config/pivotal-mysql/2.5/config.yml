@@ -20,6 +20,8 @@ product-properties:
     value: Inactive
   .properties.plan3_selector:
     value: Inactive
+  .properties.global_recipient_email:
+    value: fbloggs@gmail.com    
   .properties.backups_selector:
     value: GCS
   .properties.backups_selector.gcs.project_id:
