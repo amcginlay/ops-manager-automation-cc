@@ -31,6 +31,8 @@ product-properties:
   .properties.backups_selector.gcs.service_account_json:
     value:
       secret: '"this_is": "dummy_json"'
+  .properties.deprecated_bindings_string
+    value: X
 errand-config:
   upgrade-all-service-instances:
     post-deploy-state: false
