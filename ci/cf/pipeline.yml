@@ -84,6 +84,22 @@ resources:
     json_key: |
       ((gcp-credentials))
 
+- name: mysql-product
+  type: gcs
+  source:
+    regexp: pivotal-mysql-(.*).pivotal
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: mysql-stemcell
+  type: gcs
+  source:
+    regexp: mysql-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
 - name: platform-automation-tasks
   type: gcs
   source:
@@ -224,6 +240,46 @@ jobs:
     - put: healthwatch-stemcell
       params:
         file: healthwatch-stemcell/*.tgz
+
+- name: fetch-mysql
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-mysql-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: config/pivotal-mysql/1.5/config-pivnet.yml
+    output_mapping: {downloaded-stemcell: mysql-stemcell}
+  - aggregate:
+    - put: mysql-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: mysql-stemcell
+      params:
+        file: mysql-stemcell/*.tgz
 
 - name: fetch-platform-automation
   # We use the pivnet resource to bootstrap the pipeline,
@@ -499,6 +555,52 @@ jobs:
     params:
       ENV_FILE: config/ops-manager/env.yml
 
+- name: upload-and-stage-mysql
+  serial: true
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+        - upgrade-opsman
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: mysql-product
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: upload-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: mysql-product
+      env: config
+    params:
+      ENV_FILE: config/ops-manager/env.yml
+  - task: stage-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: mysql-product
+      env: config
+    params:
+      ENV_FILE: config/ops-manager/env.yml
+
 - name: configure-pas
   serial: true
   plan:
@@ -577,6 +679,45 @@ jobs:
       CONFIG_FILE: config/p-healthwatch/1.4/config.yml
       ENV_FILE: config/ops-manager/env.yml
 
+- name: configure-mysql
+  serial: true
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+        - upload-and-stage-mysql
+      trigger: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: configure-mysql
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-product.yml
+    input_mapping:
+      config: config
+      env: config
+      vars: config
+    params:
+      CONFIG_FILE: config/p-mysql/1.4/config.yml
+      ENV_FILE: config/ops-manager/env.yml
+
 - name: upload-stemcells
   serial: true
   plan:
@@ -593,6 +734,8 @@ jobs:
     - get: pas-stemcell
       trigger: true
     - get: healthwatch-stemcell
+      trigger: true
+    - get: mysql-stemcell
       trigger: true
     - get: config
   - task: credhub-interpolate-config
@@ -625,6 +768,14 @@ jobs:
       stemcell: healthwatch-stemcell
     params:
       ENV_FILE: config/ops-manager/env.yml
+  - task: upload-mysql-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: config
+      stemcell: mysql-stemcell
+    params:
+      ENV_FILE: config/ops-manager/env.yml
 
 - name: apply-product-changes
   serial: true
@@ -636,6 +787,7 @@ jobs:
       passed:
         - configure-pas
         - configure-healthwatch
+        - configure-mysql
       trigger: true
     - get: platform-automation-tasks
       params:
