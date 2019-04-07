@@ -11,7 +11,7 @@ network-properties:
   service_network:
     name: services
 product-properties:
-  .properties.plan1_selector.single.az_multi_select:
+  .properties.plan1_selector.single_node.az_multi_select:
     value:
     - us-central1-a
     - us-central1-b
