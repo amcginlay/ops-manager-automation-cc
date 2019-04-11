@@ -53,12 +53,12 @@ All following commands should be executed from the jumpbox unless otherwsie inst
 ## Prepare your environment file
 
 ```bash
-cat > ~/.env < EOF
+cat > ~/.env << EOF
 # *** your environment-specific variables will go here ***
 PIVNET_UAA_REFRESH_TOKEN=CHANGE_ME_PIVNET_UAA_REFRESH_TOKEN  # e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-r
 PCF_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME                        # e.g. "mydomain.com", "pal.pivotal.io", "pivotaledu.io", etc.
 PCF_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME                  # e.g. "mypks", "mypas", "cls66env99", "maroon", etc.
-GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO .            # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
+GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO              # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
 
 export OM_TARGET=https://pcf.\${PCF_SUBDOMAIN_NAME}.\${PCF_DOMAIN_NAME}
 export OM_USERNAME=admin
