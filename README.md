@@ -53,19 +53,19 @@ All following commands should be executed from the jumpbox unless otherwsie inst
 ## Prepare your environment file
 
 ```bash
-> ~/.env                                                                     # (re)create empty file
-echo "# *** your environment-specific variables will go here ***" >> ~/.env
+cat > ~/.env < EOF
+# *** your environment-specific variables will go here ***
+PIVNET_UAA_REFRESH_TOKEN=CHANGE_ME_PIVNET_UAA_REFRESH_TOKEN  # e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-r
+PCF_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME                        # e.g. "mydomain.com", "pal.pivotal.io", "pivotaledu.io", etc.
+PCF_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME                  # e.g. "mypks", "mypas", "cls66env99", "maroon", etc.
+GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO .            # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
 
-echo "PIVNET_UAA_REFRESH_TOKEN=CHANGE_ME_PIVNET_UAA_REFRESH_TOKEN" >> ~/.env # e.g. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-r
-echo "PCF_DOMAIN_NAME=CHANGE_ME_DOMAIN_NAME" >> ~/.env                       # e.g. "mydomain.com", "pal.pivotal.io", "pivotaledu.io", etc.
-echo "PCF_SUBDOMAIN_NAME=CHANGE_ME_SUBDOMAIN_NAME" >> ~/.env                 # e.g. "mypks", "mypas", "cls66env99", "maroon", etc.
-echo "GITHUB_PUBLIC_REPO=CHANGE_ME_GITHUB_PUBLIC_REPO" >> ~/.env             # e.g. https://github.com/amcginlay/ops-manager-automation-cc.git
-
-echo "export OM_TARGET=https://pcf.\${PCF_SUBDOMAIN_NAME}.\${PCF_DOMAIN_NAME}" >> ~/.env
-echo "export OM_USERNAME=admin" >> ~/.env
-echo "export OM_PASSWORD=$(uuidgen)" >> ~/.env
-echo "export OM_DECRYPTION_PASSPHRASE=\${OM_PASSWORD}" >> ~/.env
-echo "export OM_SKIP_SSL_VALIDATION=true" >> ~/.env
+export OM_TARGET=https://pcf.\${PCF_SUBDOMAIN_NAME}.\${PCF_DOMAIN_NAME}
+export OM_USERNAME=admin
+export OM_PASSWORD=$(uuidgen)
+export OM_DECRYPTION_PASSPHRASE=\${OM_PASSWORD}
+export OM_SKIP_SSL_VALIDATION=true
+EOF
 ```
 
 __Before__ continuing, open the `.env` file and update the `CHANGE_ME` values accordingly.
