@@ -22,7 +22,7 @@ For guidance, follow [these instructions](https://github.com/amcginlay/gcp-clean
 
 ```bash
 GCP_PROJECT_ID=<TARGET_GCP_PROJECT_ID>
-gcloud auth login --project ${GCP_PROJECT_ID} --quiet
+gcloud auth login --project ${GCP_PROJECT_ID} --quiet # ... if necessary
 
 gcloud services enable compute.googleapis.com \
   --project "${GCP_PROJECT_ID}"
