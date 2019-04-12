@@ -47,7 +47,7 @@ resources:
 - name: opsman-product
   type: gcs
   source:
-    regexp: OpsManager(.*)onGCP.yml
+    regexp: ops-manager-gcp*.yml
     bucket: ((gcs-bucket))
     json_key: |
       ((gcp-credentials))
