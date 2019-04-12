@@ -141,15 +141,6 @@ resources:
     json_key: |
       ((gcp-credentials))
 
-
-- name: platform-automation-tasks
-  type: gcs
-  source:
-    regexp: platform-automation-tasks-(.*).zip
-    bucket: ((gcs-bucket))
-    json_key: |
-      ((gcp-credentials))
-
 - name: platform-automation-image
   type: gcs
   source:
