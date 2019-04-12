@@ -4,11 +4,11 @@ network-properties:
   network:
     name: pks-services
   other_availability_zones:
-  - name: us-central1-a
-  - name: us-central1-b
-  - name: us-central1-c
+  - name: ((region))-a
+  - name: ((region))-b
+  - name: ((region))-c
   singleton_availability_zone:
-    name: us-central1-a
+    name: ((region))-a
 product-properties:
   .properties.admin_password:
     value:

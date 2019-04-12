@@ -1,11 +1,11 @@
 product-name: pivotal-mysql
 network-properties:
   singleton_availability_zone:
-    name: us-central1-a
+    name: ((region))-a
   other_availability_zones:
-  - name: us-central1-a
-  - name: us-central1-b
-  - name: us-central1-c
+  - name: ((region))-a
+  - name: ((region))-b
+  - name: ((region))-c
   network:
     name: pas
   service_network:
@@ -13,9 +13,9 @@ network-properties:
 product-properties:
   .properties.plan1_selector.single_node.az_multi_select:
     value:
-    - us-central1-a
-    - us-central1-b
-    - us-central1-c
+    - ((region))-a
+    - ((region))-b
+    - ((region))-c
   .properties.plan2_selector:
     value: Inactive
   .properties.plan3_selector:

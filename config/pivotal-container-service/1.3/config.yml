@@ -2,11 +2,11 @@
 product-name: pivotal-container-service
 network-properties:
   singleton_availability_zone:
-    name: us-central1-a
+    name: ((region))-a
   other_availability_zones:
-  - name: us-central1-a
-  - name: us-central1-b
-  - name: us-central1-c
+  - name: ((region))-a
+  - name: ((region))-b
+  - name: ((region))-c
   network:
     name: pks
   service_network:
@@ -20,14 +20,14 @@ product-properties:
     value: api.pks.((subdomain-name)).((domain-name))
   .properties.plan1_selector.active.master_az_placement:
     value:
-    - us-central1-a
-    - us-central1-b
-    - us-central1-c
+    - ((region))-a
+    - ((region))-b
+    - ((region))-c
   .properties.plan1_selector.active.worker_az_placement:
     value:
-    - us-central1-a
-    - us-central1-b
-    - us-central1-c
+    - ((region))-a
+    - ((region))-b
+    - ((region))-c
   .properties.plan1_selector.active.worker_instances:
     value: 1
   .properties.plan2_selector:

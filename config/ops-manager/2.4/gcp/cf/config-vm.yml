@@ -3,8 +3,8 @@ opsman-configuration:
   gcp:
     gcp_service_account: ((gcp-credentials))
     project: ((gcp-project-id))
-    region: us-central1
-    zone: us-central1-a
+    region: ((region))
+    zone: ((region))-a
     vm_name: ops-manager-vm
     vpc_subnet: ((subdomain-name))-infrastructure-subnet
     tags: ((subdomain-name))-ops-manager-external
