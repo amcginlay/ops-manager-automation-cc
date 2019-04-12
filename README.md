@@ -34,7 +34,7 @@ gcloud compute instances create "jbox-cc" \
   --boot-disk-size "200" \
   --machine-type=g1-small \
   --project "${GCP_PROJECT_ID}" \
-  --zone "${GCP_REGION}"
+  --zone "${GCP_REGION}"-a
 ```
 
 ## Move to the jumpbox and log in to GCP
@@ -42,7 +42,7 @@ gcloud compute instances create "jbox-cc" \
 ```bash
 gcloud compute ssh ubuntu@jbox-cc \
   --project "${GCP_PROJECT_ID}" \
-  --zone "${GCP_REGION}"
+  --zone "${GCP_REGION}"-a
 ```
   
 ```bash
