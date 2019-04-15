@@ -422,3 +422,7 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
     --iaas gcp \
     ${PCF_SUBDOMAIN_NAME}
 ```
+
+### Otherwise ...
+
+If all else fails, follow these steps: https://github.com/amcginlay/gcp-cleanup
