@@ -425,4 +425,4 @@ GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
 
 ### Otherwise ...
 
-If all else fails, follow these steps: https://github.com/amcginlay/gcp-cleanup
+If all else fails, follow [these steps](https://github.com/amcginlay/gcp-cleanup)
