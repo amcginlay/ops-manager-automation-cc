@@ -385,24 +385,35 @@ The following steps will help you when you're ready to dispose of everything.
 
 Use the `om` tool to delete the installation (be careful, you will __not__ be asked to confirm this operation):
 
+### Delete your deployed products and BOSH director:
+
 ```bash
 om delete-installation
 ```
 
-Delete the Ops Manager VM:
+### Delete the Ops Manager VM:
 
 ```bash
 gcloud compute instances delete "ops-manager-vm" --zone "us-central1-a" --quiet
 ```
 
-Unwind the remaining PCF infrastructure:
+### Unwind the remaining PCF infrastructure:
+
+If you're targetting PAS ...
+
+```bash
+cd ~/terraforming/terraforming-pas
+terraform destroy --auto-approve
+```
+
+... or, if you're targetting PKS
 
 ```bash
 cd ~/terraforming/terraforming-pks
 terraform destroy --auto-approve
 ```
 
-Unintstall Concourse with `control-tower`:
+###Unintstall Concourse with `control-tower`:
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
