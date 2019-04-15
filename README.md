@@ -383,9 +383,9 @@ Run this job manually once the `install-opsman` job has run successfully.
 
 The following steps will help you when you're ready to dispose of everything.
 
-Use the `om` tool to delete the installation (be careful, you will __not__ be asked to confirm this operation):
-
 ### Delete your deployed products and BOSH director:
+
+Use the `om` tool to delete the installation (be careful, you will __not__ be asked to confirm this operation):
 
 ```bash
 om delete-installation
