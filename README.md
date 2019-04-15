@@ -391,13 +391,13 @@ Use the `om` tool to delete the installation (be careful, you will __not__ be as
 om delete-installation
 ```
 
-### Delete the Ops Manager VM:
+### Delete the Ops Manager VM
 
 ```bash
 gcloud compute instances delete "ops-manager-vm" --zone "us-central1-a" --quiet
 ```
 
-### Unwind the remaining PCF infrastructure:
+### Unwind the remaining PCF infrastructure
 
 If you're targetting PAS ...
 
@@ -413,7 +413,7 @@ cd ~/terraforming/terraforming-pks
 terraform destroy --auto-approve
 ```
 
-### Unintstall Concourse with `control-tower`:
+### Unintstall Concourse
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
