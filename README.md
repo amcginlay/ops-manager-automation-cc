@@ -413,7 +413,7 @@ cd ~/terraforming/terraforming-pks
 terraform destroy --auto-approve
 ```
 
-###Unintstall Concourse with `control-tower`:
+### Unintstall Concourse with `control-tower`:
 
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=~/gcp_credentials.json \
